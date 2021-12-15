@@ -8,7 +8,6 @@ extern "C" {
     #include "project_config.h"
 
     #ifdef DEBUG
-
     extern void __error__(void);
 
     #define ASSERT(expr) do                                                       \

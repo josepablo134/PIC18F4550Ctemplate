@@ -5,6 +5,12 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="include" projectFiles="true">
+        <logicalFolder name="f2" displayName="bldrCtl" projectFiles="true">
+          <itemPath>include/bldrCtl/bldrCtl.h</itemPath>
+          <itemPath>include/bldrCtl/bldrCtl_cfg.h</itemPath>
+          <itemPath>include/bldrCtl/bldrCtl_types.h</itemPath>
+          <itemPath>include/bldrCtl/bldrCtl_flashWrapper.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="f1" displayName="config" projectFiles="true">
           <itemPath>include/config/project_config.h</itemPath>
           <itemPath>include/config/project_macros.h</itemPath>
@@ -21,7 +27,12 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="project" projectFiles="true">
         <logicalFolder name="f1" displayName="source" projectFiles="true">
+          <logicalFolder name="f1" displayName="bldrCtl" projectFiles="true">
+            <itemPath>project/source/bldrCtl/bldrCtl.c</itemPath>
+            <itemPath>project/source/bldrCtl/bldrCtl_flashWrapper.c</itemPath>
+          </logicalFolder>
           <itemPath>project/source/project_macros.c</itemPath>
+          <itemPath>project/source/board_config.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>main.c</itemPath>
