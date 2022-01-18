@@ -83,12 +83,12 @@ extern "C" {
     // Use project enums instead of #define for ON and OFF.
 
     #include <xc.h>
-
-    #include <xc.h>
     #include <pic18f4550.h>
     #define  clrwdt(){asm("CLRWDT");}
     #define  sleep(){asm("SLEEP");}
     #define  reset(){asm("RESET");}
+
+    extern void Board_Init(void);
 
 #ifdef	__cplusplus
 }

@@ -33,7 +33,6 @@
         <logicalFolder name="f1" displayName="source" projectFiles="true">
           <logicalFolder name="f1" displayName="bldrCtl" projectFiles="true">
             <itemPath>project/source/bldrCtl/bldrCtl.c</itemPath>
-            <itemPath>project/source/bldrCtl/bldrCtl_flashWrapper.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="flashCtl" projectFiles="true">
             <itemPath>project/source/flashCtl/flash.c</itemPath>
@@ -129,7 +128,7 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="verbose" value="false"/>
-        <property key="warning-level" value="-3"/>
+        <property key="warning-level" value="0"/>
         <property key="what-to-do" value="ignore"/>
       </HI-TECH-COMP>
       <HI-TECH-LINK>
@@ -1218,10 +1217,6 @@
         <property key="user-pack-device-support" value=""/>
         <property key="wpo-lto" value="false"/>
       </XC8-config-global>
-      <item path="project/source/bldrCtl/bldrCtl_flashWrapper.c"
-            ex="true"
-            overriding="false">
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

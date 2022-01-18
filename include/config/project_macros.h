@@ -22,6 +22,12 @@ extern "C" {
     #define ASSERT(expr)
     #endif
 
+    #define SET_PC( ADDR )  {\
+        PCLATU = 0;\
+        PCLATH = ADDR >> 8U;\
+        PCLAT  = 0xFF & ADDR;\
+    }
+
 #ifdef	__cplusplus
 }
 #endif /* __cplusplus */

@@ -18,6 +18,8 @@ extern "C" {
         BLDR_IDLE,
         BLDR_BUSY
     }BldrState_t;
+    
+    typedef uint16_t Bldr_Appl_Addr_t;
 
 #ifdef	__cplusplus
 }

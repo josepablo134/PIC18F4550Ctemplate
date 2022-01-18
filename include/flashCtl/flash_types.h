@@ -5,16 +5,16 @@
 extern "C" {
 #endif /* __cplusplus */
     
-#include <stdint.h>
+    #include <stdint.h>
 
-typedef uint16_t FlashAddress_t;
+    typedef uint16_t FlashAddress_t;
 
-typedef uint16_t FlashSize_t;
+    typedef uint16_t FlashSize_t;
 
-typedef enum FlashStdReturn_t{
-    FLS_OK,
-    FLS_NOT_OK
-}FlashStdReturn_t;
+    typedef enum FlashStdReturn_t{
+        FLS_OK,
+        FLS_NOT_OK
+    }FlashStdReturn_t;
 
 #ifdef __cplusplus
 }

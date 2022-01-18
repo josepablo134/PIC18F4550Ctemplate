@@ -1,11 +1,13 @@
 #include "../../include/config/board_config.h"
+#include "../../include/config/project_macros.h"
+#include "../../include/bldrCtl/bldrCtl_cfg.h"
 
 void __interrupt(high_priority) Board_HP_ISR(void){
-    
+    SET_PC( BLDR_CFG_APPL_HIGH_PRIOR_ISR );
 }
 
-void __interrupt(low_priority) Board_LP_ISR(){
-    
+void __interrupt(low_priority) Board_LP_ISR(void){
+    SET_PC( BLDR_CFG_APPL_LOW_PRIOR_ISR );
 }
 
 void Board_Init(){

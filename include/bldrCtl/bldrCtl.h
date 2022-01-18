@@ -8,11 +8,15 @@ extern "C" {
     #include "bldrCtl_cfg.h"
     #include "bldrCtl_types.h"
     
-    extern void BLDR_init();
+    extern void BLDR_Init(void);
     
-    extern BldrState_t BLDR_getState();
+    extern void BLDR_tearDown(void);
     
-    extern BldrState_t BLDR_MainHandler();
+    extern BldrState_t BLDR_getState(void);
+    
+    extern BldrState_t BLDR_MainHandler(void);
+    
+    extern BldrStdReturn_t BLDR_PassControl( Bldr_Appl_Addr_t addr );
 
 #ifdef	__cplusplus
 }
