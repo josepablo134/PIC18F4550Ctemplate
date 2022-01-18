@@ -9,12 +9,16 @@
           <itemPath>include/bldrCtl/bldrCtl.h</itemPath>
           <itemPath>include/bldrCtl/bldrCtl_cfg.h</itemPath>
           <itemPath>include/bldrCtl/bldrCtl_types.h</itemPath>
-          <itemPath>include/bldrCtl/bldrCtl_flashWrapper.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="config" projectFiles="true">
           <itemPath>include/config/project_config.h</itemPath>
           <itemPath>include/config/project_macros.h</itemPath>
           <itemPath>include/config/board_config.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="flashCtl" projectFiles="true">
+          <itemPath>include/flashCtl/flash.h</itemPath>
+          <itemPath>include/flashCtl/flash_cfg.h</itemPath>
+          <itemPath>include/flashCtl/flash_types.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -31,6 +35,9 @@
             <itemPath>project/source/bldrCtl/bldrCtl.c</itemPath>
             <itemPath>project/source/bldrCtl/bldrCtl_flashWrapper.c</itemPath>
           </logicalFolder>
+          <logicalFolder name="f2" displayName="flashCtl" projectFiles="true">
+            <itemPath>project/source/flashCtl/flash.c</itemPath>
+          </logicalFolder>
           <itemPath>project/source/project_macros.c</itemPath>
           <itemPath>project/source/board_config.c</itemPath>
         </logicalFolder>
@@ -45,6 +52,8 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>include/config</Elem>
+    <Elem>include/flashCtl</Elem>
+    <Elem>project/source/flashCtl</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -54,7 +63,7 @@
         <targetDevice>PIC18F4550</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.32</languageToolchainVersion>
         <platform>2</platform>
@@ -224,7 +233,7 @@
         <property key="oscillator.rcfrequency" value="250"/>
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>
         <property key="periphADC1.altscl" value="false"/>
-        <property key="periphADC1.minTacq" value=""/>
+        <property key="periphADC1.minTacq" value="5"/>
         <property key="periphADC1.tacqunits" value="microseconds"/>
         <property key="periphADC2.altscl" value="false"/>
         <property key="periphADC2.minTacq" value=""/>
@@ -715,7 +724,7 @@
         <property key="oscillator.rcfrequency" value="250"/>
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>
         <property key="periphADC1.altscl" value="false"/>
-        <property key="periphADC1.minTacq" value=""/>
+        <property key="periphADC1.minTacq" value="5"/>
         <property key="periphADC1.tacqunits" value="microseconds"/>
         <property key="periphADC2.altscl" value="false"/>
         <property key="periphADC2.minTacq" value=""/>
@@ -1209,6 +1218,10 @@
         <property key="user-pack-device-support" value=""/>
         <property key="wpo-lto" value="false"/>
       </XC8-config-global>
+      <item path="project/source/bldrCtl/bldrCtl_flashWrapper.c"
+            ex="true"
+            overriding="false">
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>

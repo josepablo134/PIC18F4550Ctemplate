@@ -14,6 +14,8 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>include/config</sourceRootElem>
+                <sourceRootElem>include/flashCtl</sourceRootElem>
+                <sourceRootElem>project/source/flashCtl</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

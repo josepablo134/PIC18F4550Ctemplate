@@ -7,17 +7,17 @@ extern "C" {
 
     #include <stdint.h>
     
-    typedef uint32_t bldr_address;
-    
-    typedef uint32_t bldr_size;
-    
-    typedef uint8_t  bldr_byte;
-    
-    typedef enum bldr_state{
-        bldr_init,
-        bldr_idle,
-        bldr_busy
-    }bldr_state;
+    typedef enum BldrStdReturn_t{
+        BLDR_OK,
+        BLDR_NOT_OK
+    }BldrStdReturn_t;
+
+    typedef enum BldrState_t{
+        BLDR_UNINIT,
+        BLDR_INIT,
+        BLDR_IDLE,
+        BLDR_BUSY
+    }BldrState_t;
 
 #ifdef	__cplusplus
 }

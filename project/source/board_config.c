@@ -1,8 +1,7 @@
 #include "../../include/config/board_config.h"
-#include "../../include/bldrCtl/bldrCtl_flashWrapper.h"
 
 void __interrupt(high_priority) Board_HP_ISR(void){
-    BLDR_flashISR();
+    
 }
 
 void __interrupt(low_priority) Board_LP_ISR(){
