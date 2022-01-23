@@ -6,7 +6,7 @@ extern "C" {
 #endif /* __cplusplus */
     
     /// Enables ASSERT and Debug over ICSP
-    #define DEBUG 1
+    //#define DEBUG 1
 
 #ifdef	__cplusplus
 }
