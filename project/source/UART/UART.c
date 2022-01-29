@@ -71,7 +71,7 @@ void UART_open(uint32_t baud){
     RCSTAbits.SPEN = 1;//Serial Port Enable
 }
     /// Comenzar una transmision
-uint8_t UART_Transmit(void* buffer, unsigned int size){
+uint8_t UART_TransmitAsync(const void* buffer, uart_buffer_size_t size){
     if( buffer && size ){ // Si la direccion o el tamanio son validos
         if( pTx ){/// Si no hay alguna transmision pendiente
             if( status & TX_BUSY ){
@@ -86,19 +86,54 @@ uint8_t UART_Transmit(void* buffer, unsigned int size){
         return 0xFF;
     }
 SET_PTR:
-    pTx = buffer;
+    pTx = (void*) buffer;
     iTx = size;
     status |= TX_BUSY;
     PIE1bits.TX1IE = 1;     //Activar sistema de interrupciones
     return 0;
 }
-void UART_CancelTransmit(void){
+uint8_t UART_TransmitSync(const void* buffer, uart_buffer_size_t size){
+    if( buffer && size ){ // Si la direccion o el tamanio son validos
+        if( pTx ){/// Si no hay alguna transmision pendiente
+            if( status & TX_BUSY ){
+                return status;
+            }else{
+                goto SEND;
+            }
+        }else{
+            goto SEND;
+        }
+    }else{
+        return 0xFF;
+    }
+SEND:
+    pTx = (void*) buffer;
+    iTx = size;
+	// Set TX BUSY Flag
+    status |= TX_BUSY;
+	while( iTx ){
+		if(PIR1bits.TXIF){
+			iTx--;
+			if( iTx ){
+				TXREG = *pTx;
+				*pTx++;
+			}else{
+				// Clear TX BUSY flag
+				status &= RX_MASK;
+			}
+		}
+	}
+    return status;
+}
+
+uart_status_t UART_CancelTransmit(void){
     PIE1bits.TX1IE = 0;     //Desactivar sistema de interrupciones
     status = (status&RX_MASK) | TX_CANCEL;
-    return;
+    return status;
 }
-    /// Comenzar una recepcion
-uint8_t UART_Receive(void* buffer, unsigned int size){
+
+/// Comenzar una recepcion
+uart_status_t UART_Receive(void* buffer, uart_buffer_size_t size){
     if( buffer || size ){ // Si la direccion o el tamanio son validos
         if( pRx ){/// Si no hay alguna transmision pendiente
             if( status & RX_BUSY ){
@@ -117,12 +152,13 @@ SET_PTR:
     iRx = size;
     status |= RX_BUSY;
     PIE1bits.RC1IE = 1;     //Activar sistema de interrupciones
-    return 0;
+    return status;
 }
-void UART_CancelReceive(void){
+
+uart_status_t UART_CancelReceive(void){
     PIE1bits.RC1IE = 0;     //Desactivar sistema de interrupciones
     status = (status&TX_MASK) | RX_CANCEL;
-    return;
+    return status;
 }
     /// Solicitar el estado de la transferencia
 uint8_t UART_Status(void){

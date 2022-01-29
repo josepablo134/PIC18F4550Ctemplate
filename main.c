@@ -82,18 +82,15 @@ void main(void) {
     Keypad_init();
     
     strcpy( msg , "Hello world!\r\n" );
-    UART_Transmit( msg , strlen( msg ) );
-        while( UART_Status() ){}
-    
+    UART_TransmitSync( msg , strlen( msg ) );
     strcpy( msg , "Key pressed : [x] [xx]\r\n" );
     while(1){
         key = Keypad_captureKey();
-        while( UART_Status() ){}
         //msg[ 15 ] = Keypad_key2ascii( key );
         msg[ 19 ] = int2hex_ascii[ key >> 4U ];
         msg[ 20 ] = int2hex_ascii[ key & 0x0F ];
         
-        UART_Transmit( msg , strlen( msg ) );
+        UART_TransmitSync( msg , strlen( msg ) );
         LATAbits.LA4 = !PORTAbits.RA4;
         __delay_ms( 500 );
     }

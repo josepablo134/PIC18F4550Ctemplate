@@ -7,7 +7,7 @@ extern "C" {
 
     #include "project_config.h"
 
-    #ifdef DEBUG
+    #ifdef __DEBUG
     extern void __error__(void);
 
     #define ASSERT(expr) do                                                       \

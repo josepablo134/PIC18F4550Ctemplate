@@ -1,6 +1,6 @@
 #include "../../include/config/project_macros.h"
 
-#ifdef DEBUG
+#ifdef __DEBUG
 void __error__(void){
     for(;;);
 }

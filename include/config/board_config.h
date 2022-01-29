@@ -40,7 +40,7 @@ extern "C" {
     // CONFIG4L
     #pragma config STVREN = ON      // Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
     #pragma config LVP = OFF        // Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-#ifdef DEBUG
+#ifdef __DEBUG
     #pragma config ICPRT = OFF      // Dedicated In-Circuit Debug/Programming Port (ICPORT) Enable bit (ICPORT enabled)
     #pragma config DEBUG = ON
 #else
