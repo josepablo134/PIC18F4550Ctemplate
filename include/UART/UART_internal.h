@@ -9,7 +9,7 @@
 
 	// Place the following macro at the correct interrupt vector
 	
-    #define UART_INTERRUPT  {                                           \
+    #define UART_ISR() {                                                \
                              if(PIR1bits.RC1IF){                        \
                                 *pRx = RCREG;                           \
                                 *pRx++;                                 \

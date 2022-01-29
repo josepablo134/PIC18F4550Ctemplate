@@ -3,13 +3,29 @@
 #include "../../include/bldrCtl/bldrCtl_cfg.h"
 #include "../../include/UART/UART.h"
 
+#define T1_SCK_FREQ             32768U
+#define T1_SCK_DIV              1U
+#define T1_FREQ                 (T1_SCK_FREQ/T1_SCK_DIV)
+#define T1_MAX_VAL              65536U
+#define T1_1MS                  (T1_FREQ/1000U)
+#define T1_SYSTICK_PRECHARGE    ((uint16_t)T1_MAX_VAL - T1_1MS)
+
+#define TMR1_ISR()              {\
+    if( PIR1bits.TMR1IF ){\
+        TMR1 += ((uint16_t)T1_SYSTICK_PRECHARGE);\
+        PIR1bits.TMR1IF = 0;\
+    }\
+}
+
 void __interrupt(high_priority) Board_HP_ISR(void){
-    // SET_PC( BLDR_CFG_APPL_HIGH_PRIOR_ISR );
+    if( PIR1bits.TMR1IF ){
+        LATAbits.LA3 = !PORTAbits.RA3;
+        TMR1_ISR();
+    }
 }
 
 void __interrupt(low_priority) Board_LP_ISR(void){
-    // SET_PC( BLDR_CFG_APPL_LOW_PRIOR_ISR );
-    UART_INTERRUPT;
+    UART_ISR();
 }
 
 void Board_Init(){
@@ -18,7 +34,11 @@ void Board_Init(){
      */
     ADCON1 = 0x0F;
     CMCON = 0x07;
+    TRISAbits.RA2 = 0;
+    TRISAbits.RA3 = 0;
     TRISAbits.RA4 = 0;
+    LATAbits.LA2 = 0;
+    LATAbits.LA3 = 0;
     LATAbits.LA4 = 0;
     
     /**
