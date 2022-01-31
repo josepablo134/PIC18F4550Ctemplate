@@ -40,6 +40,16 @@
             </logicalFolder>
             <itemPath>project/inc/Board/board_config.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="Keypad" displayName="Keypad" projectFiles="true">
+            <itemPath>project/inc/Keypad/keypad_types.h</itemPath>
+            <itemPath>project/inc/Keypad/keypad_include.h</itemPath>
+            <itemPath>project/inc/Keypad/keypad.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="utils" projectFiles="true">
+            <itemPath>project/inc/utils/utils.h</itemPath>
+            <itemPath>project/inc/utils/utils_types.h</itemPath>
+            <itemPath>project/inc/utils/utils_include.h</itemPath>
+          </logicalFolder>
           <itemPath>project/inc/project_macros.h</itemPath>
         </logicalFolder>
         <logicalFolder name="source" displayName="source" projectFiles="true">
@@ -57,6 +67,12 @@
               <itemPath>project/source/Board/UART/UART.c</itemPath>
             </logicalFolder>
             <itemPath>project/source/Board/board_config.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="Keypad" displayName="Keypad" projectFiles="true">
+            <itemPath>project/source/Keypad/keypad.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="utils" projectFiles="true">
+            <itemPath>project/source/utils/utils.c</itemPath>
           </logicalFolder>
           <itemPath>project/source/project_macros.c</itemPath>
         </logicalFolder>
