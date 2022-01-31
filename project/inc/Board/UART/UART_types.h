@@ -16,7 +16,7 @@
     #define RX_CANCEL           0x20
     #define DEFAULT_BAUD        115200
 
-    typedef uint8_t		uart_status_t;
-	typedef uint16_t	uart_buffer_size_t;
+    typedef uint8_t             uart_status_t;
+	typedef uint16_t            uart_buffer_size_t;
     
 #endif

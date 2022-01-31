@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/config/board_config.h"
-#include "include/config/project_macros.h"
-#include "include/bldrCtl/bldrCtl.h"
-#include "include/flashCtl/flash.h"
-#include "include/UART/UART.h"
+#include "inc/Board/board_config.h"
+#include "inc/Board/UART/UART.h"
+#include "inc/Board/Timer1/Timer1.h"
+#include "inc/Board/flashCtl/flash.h"
+#include "inc/project_macros.h"
 
 typedef uint8_t Keypad_key_t;
 
@@ -74,82 +74,9 @@ const char int2hex_ascii[] = {
     'C','D','E','F'
 };
 
-void Timer1_Init(){
-	T1CON = 0x00U;
-	TMR1H = 0x00U;
-	TMR1L = 0x00U;
-    PIE1bits.TMR1IE = 0; // Interrupt Enable
-    PIR1bits.TMR1IF = 0; // Interrupt flag
-}
-
-typedef enum {
-    TMR1_CFG_DIV_1=0,
-    TMR1_CFG_DIV_2,
-    TMR1_CFG_DIV_4,
-    TMR1_CFG_DIV_8
-}timer1_cfg_div;
-
-typedef enum {
-    TMR1_CFG_CLOCK_INTERNAL, /* Use FOSC/4 clock */
-    TMR1_CFG_CLOCK_EXTERNAL /* Use TMR1 external clock */
-} timer1_cfg_clock_source;
-
-void Timer1_open( timer1_cfg_div prescaler , timer1_cfg_clock_source clock ){
-	T1CON = 0x00U;
-    switch( clock ){
-			case TMR1_CFG_CLOCK_EXTERNAL:
-				{
-					T1CONbits.T1RUN = 1;	// External T1 Clock
-					T1CONbits.T1OSCEN = 1;	// External Osc. Enabled
-					T1CONbits.TMR1CS = 1; 	// External clock
-					T1CONbits.T1SYNC = 0; 	// (Negated bit) Sync. external clock with internal clock
-				}
-					break;
-			case TMR1_CFG_CLOCK_INTERNAL:
-			default:
-				{
-					T1CONbits.T1RUN = 0;	// External T1 Clock
-					T1CONbits.T1OSCEN = 0;	// External Osc. Enabled
-					T1CONbits.TMR1CS = 0; 	// External clock
-				}
-					break;
-    }
-	T1CONbits.RD16 = 0; // 16 bit mode
-	T1CONbits.T1CKPS = (prescaler & 0x3U); // Prescale (2 bits), from 1 to 8 units
-    
-    IPR1bits.TMR1IP = 1; // High priority ISR
-    PIE1bits.TMR1IE = 0; // Interrupt Enable
-    PIR1bits.TMR1IF = 0; // Interrupt flag
-}
-
-void Timer1_load( uint16_t time ){
-    time = (uint16_t)(-1) - time;
-    TMR1H = (uint8_t)( time >> 8U );
-    TMR1L = (uint8_t)( time & 0xFFU );
-}
-
-void Timer1_start(){
-    /// Start incrementing timer and enable interrupt
-    PIE1bits.TMR1IE = 1;
-    T1CONbits.TMR1ON = 1;
-}
-
-void Timer1_stop(){
-    /// Stop timer and disable interrupt
-    PIE1bits.TMR1IE = 0;
-    T1CONbits.TMR1ON = 0;
-}
-
-uint16_t Timer1_read(){
-	uint16_t tmr1_val;
-	tmr1_val = (uint16_t) TMR1L;
-	tmr1_val = tmr1_val | (uint16_t)(TMR1H<<8U);
-	return tmr1_val;
-}
-
 void main(void) {
-    Keypad_key_t key=0;
-	uint16_t timer1;
+    Keypad_key_t    key=0;
+	uint16_t        timer1;
 
     Board_Init();
     

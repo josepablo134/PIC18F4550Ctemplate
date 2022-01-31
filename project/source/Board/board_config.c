@@ -1,7 +1,7 @@
-#include "../../include/config/board_config.h"
-#include "../../include/config/project_macros.h"
-#include "../../include/bldrCtl/bldrCtl_cfg.h"
-#include "../../include/UART/UART.h"
+#include "../../inc/Board/board_config.h"
+#include "../../inc/project_macros.h"
+#include "../../inc/bldrCtl/bldrCtl_cfg.h"
+#include "../../inc/Board/UART/UART.h"
 
 #define T1_SCK_FREQ             32768U
 #define T1_SCK_DIV              1U

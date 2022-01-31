@@ -1,8 +1,7 @@
 #ifndef _BLDR_CTL_CFG_H_
 #define	_BLDR_CTL_CFG_H_
 
-    #include "../flashCtl/flash_cfg.h"
-
+    #include "../Board/flashCtl/flash_cfg.h"
     #include "bldrCtl_types.h"
 
     #define BLDR_CFG_LOCAL_BUFFER_SIZE      FLASH_CFG_SECTOR_SIZE

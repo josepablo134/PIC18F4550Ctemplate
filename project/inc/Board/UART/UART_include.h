@@ -2,6 +2,6 @@
 #define	_UART_INC_H
 
     #include <stdint.h>
-    #include "../config/board_config.h"
+    #include "../board_config.h"
 
 #endif

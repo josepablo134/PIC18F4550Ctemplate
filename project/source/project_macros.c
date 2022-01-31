@@ -1,4 +1,4 @@
-#include "../../include/config/project_macros.h"
+#include "../inc/project_macros.h"
 
 #ifdef __DEBUG
 void __error__(void){

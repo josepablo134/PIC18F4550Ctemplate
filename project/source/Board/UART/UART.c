@@ -1,4 +1,4 @@
-#include "../../../include/UART/UART.h"
+#include "../../../inc/Board/UART/UART.h"
 
 volatile uint8_t status;
 volatile unsigned char *pTx;

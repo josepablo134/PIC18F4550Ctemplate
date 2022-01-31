@@ -15,9 +15,8 @@
             <sourceRootList>
                 <sourceRootElem>include/config</sourceRootElem>
                 <sourceRootElem>include/flashCtl</sourceRootElem>
-                <sourceRootElem>project/source/flashCtl</sourceRootElem>
-                <sourceRootElem>project/source/UART</sourceRootElem>
                 <sourceRootElem>include/UART</sourceRootElem>
+                <sourceRootElem>project</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

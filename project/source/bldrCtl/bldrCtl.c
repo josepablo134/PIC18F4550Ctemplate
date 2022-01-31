@@ -1,6 +1,6 @@
-#include "../../../include/config/board_config.h"
-#include "../../../include/bldrCtl/bldrCtl.h"
-#include "../../../include/config/project_macros.h"
+#include "../../inc/Board/board_config.h"
+#include "../../inc/bldrCtl/bldrCtl.h"
+#include "../../inc/project_macros.h"
 
 static BldrState_t __state = BLDR_UNINIT;
 
