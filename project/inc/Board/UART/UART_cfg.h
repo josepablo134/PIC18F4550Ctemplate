@@ -4,5 +4,6 @@
 	#include "UART_types.h"
 
     #define UART_CFG_ISR_PRIORITY   UART_ISR_PRIORITY_LOW
+    #define DEFAULT_BAUDRATE        115200U
 
 #endif

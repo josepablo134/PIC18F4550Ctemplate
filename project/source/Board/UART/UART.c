@@ -1,19 +1,34 @@
 #include "../../../inc/Board/UART/UART.h"
 
-volatile uint8_t status;
-volatile unsigned char *pTx;
-volatile unsigned char *pRx;
-volatile unsigned int iTx;
-volatile unsigned int iRx;
+volatile uart_status_t status;
+volatile uart_byte *pTx;
+volatile uart_byte *pRx;
+volatile uart_buffer_size_t iTx;
+volatile uart_buffer_size_t iRx;
 
-    /// Inicializar el puerto serial
+/*****************************************************************************
+ *  Internal interfaces declaration
+ *****************************************************************************/
+static void UART_internalTransmitAsync(const uart_byte* buffer,
+        uart_buffer_size_t size);
+static void UART_internalTransmitSync(const uart_byte* buffer,
+        uart_buffer_size_t size);
+static void UART_internalReceiveAsync(uart_byte* buffer,
+        uart_buffer_size_t size);
+static void UART_internalReceiveSync(uart_byte* buffer,
+        uart_buffer_size_t size);
+
+/*****************************************************************************
+ *  Public interfaces definition
+ *****************************************************************************/
 void UART_init(){
     status = 0x00;
     pTx = pRx = 0x00;
     iTx = iRx = 0x00;
     return;
 }
-void UART_open(uint32_t baud){
+
+void UART_open(uart_baudrate baud){
     uint16_t buffer;
     //Configurar pines
     //TX(C6) - RX(C7)
@@ -70,59 +85,38 @@ void UART_open(uint32_t baud){
     RCSTAbits.CREN = 1;//Rx Enable
     RCSTAbits.SPEN = 1;//Serial Port Enable
 }
-    /// Comenzar una transmision
-uint8_t UART_TransmitAsync(const void* buffer, uart_buffer_size_t size){
-    if( buffer && size ){ // Si la direccion o el tamanio son validos
+
+uart_status_t UART_TransmitAsync(const uart_byte* buffer, uart_buffer_size_t size){
+    if( buffer && size ){// Si la direccion o el tamanio son validos
         if( pTx ){/// Si no hay alguna transmision pendiente
             if( status & TX_BUSY ){
                 return status;
             }else{
-                goto SET_PTR;
+                UART_internalTransmitAsync( buffer , size );
             }
         }else{
-            goto SET_PTR;
+            UART_internalTransmitAsync( buffer , size );
         }
     }else{
-        return 0xFF;
+        return UART_ERROR;
     }
-SET_PTR:
-    pTx = (void*) buffer;
-    iTx = size;
-    status |= TX_BUSY;
-    PIE1bits.TX1IE = 1;     //Activar sistema de interrupciones
-    return 0;
+    return status;
 }
-uint8_t UART_TransmitSync(const void* buffer, uart_buffer_size_t size){
+
+uart_status_t UART_TransmitSync(const uart_byte* buffer, uart_buffer_size_t size){
     if( buffer && size ){ // Si la direccion o el tamanio son validos
         if( pTx ){/// Si no hay alguna transmision pendiente
             if( status & TX_BUSY ){
                 return status;
             }else{
-                goto SEND;
+                UART_internalTransmitSync( buffer, size );
             }
         }else{
-            goto SEND;
+            UART_internalTransmitSync( buffer, size );
         }
     }else{
-        return 0xFF;
+        return UART_ERROR;
     }
-SEND:
-    pTx = (void*) buffer;
-    iTx = size;
-	// Set TX BUSY Flag
-    status |= TX_BUSY;
-	while( iTx ){
-		if(PIR1bits.TXIF){
-			iTx--;
-			if( iTx ){
-				TXREG = *pTx;
-				*pTx++;
-			}else{
-				// Clear TX BUSY flag
-				status &= RX_MASK;
-			}
-		}
-	}
     return status;
 }
 
@@ -132,26 +126,37 @@ uart_status_t UART_CancelTransmit(void){
     return status;
 }
 
-/// Comenzar una recepcion
-uart_status_t UART_Receive(void* buffer, uart_buffer_size_t size){
+uart_status_t UART_ReceiveAsync(uart_byte* buffer, uart_buffer_size_t size){
     if( buffer || size ){ // Si la direccion o el tamanio son validos
         if( pRx ){/// Si no hay alguna transmision pendiente
             if( status & RX_BUSY ){
                 return status;
             }else{
-                goto SET_PTR;
+                UART_internalReceiveAsync( buffer, size );
             }
         }else{
-            goto SET_PTR;
+            UART_internalReceiveAsync( buffer, size );
         }
     }else{
-        return 0xFF;
+        return UART_ERROR;
     }
-SET_PTR:
-    pRx = buffer;
-    iRx = size;
-    status |= RX_BUSY;
-    PIE1bits.RC1IE = 1;     //Activar sistema de interrupciones
+    return status;
+}
+
+uart_status_t UART_ReceiveSync(uart_byte* buffer, uart_buffer_size_t size){
+    if( buffer || size ){ // Si la direccion o el tamanio son validos
+        if( pRx ){/// Si no hay alguna transmision pendiente
+            if( status & RX_BUSY ){
+                return status;
+            }else{
+                UART_internalReceiveSync( buffer, size );
+            }
+        }else{
+            UART_internalReceiveSync( buffer, size );
+        }
+    }else{
+        return UART_ERROR;
+    }
     return status;
 }
 
@@ -160,7 +165,57 @@ uart_status_t UART_CancelReceive(void){
     status = (status&TX_MASK) | RX_CANCEL;
     return status;
 }
-    /// Solicitar el estado de la transferencia
-uint8_t UART_Status(void){
+
+uart_status_t UART_Status(void){
     return status;
 }
+
+/*****************************************************************************
+ *  Internal interfaces definition
+ *****************************************************************************/
+static void UART_internalTransmitAsync(const uart_byte* buffer, uart_buffer_size_t size){
+    pTx = (void*) buffer;
+    iTx = size;
+    status |= TX_BUSY;
+    PIE1bits.TX1IE = 1;/// Enable TX interrupt
+}
+
+static void UART_internalTransmitSync(const uart_byte* buffer, uart_buffer_size_t size){
+    pTx = (void*) buffer;
+    iTx = size;
+	// Set TX BUSY Flag
+    status |= TX_BUSY;
+	while( iTx ){
+		if(PIR1bits.TXIF){
+            TXREG = *pTx;
+            *pTx++;
+			iTx--;
+		}
+	}
+    // Clear TX BUSY flag
+    status &= RX_MASK;
+}
+
+static void UART_internalReceiveAsync(uart_byte* buffer, uart_buffer_size_t size){
+    pRx = buffer;
+    iRx = size;
+    status |= RX_BUSY;
+    PIE1bits.RC1IE = 1;/// Enable RX interrupt
+}
+
+static void UART_internalReceiveSync(uart_byte* buffer, uart_buffer_size_t size){
+    pRx = buffer;
+    iRx = size;
+    // Set RX BUSY flag
+    status |= RX_BUSY;
+    while( iRx ){
+        if(PIR1bits.RC1IF){
+            *pRx = RCREG;
+            *pRx++;
+            iRx--;
+        }
+    }
+    // Clear RX BUSY flag
+    status &= TX_MASK;
+}
+

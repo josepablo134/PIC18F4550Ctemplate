@@ -3,8 +3,10 @@
 
 	#include "UART_types.h"
 
-    extern volatile unsigned char          *pTx,*pRx;
-    extern volatile unsigned int            iTx,iRx;
+    extern volatile uart_byte               *pTx;
+    extern volatile uart_byte               *pRx;
+    extern volatile uart_buffer_size_t      iTx;
+    extern volatile uart_buffer_size_t      iRx;
     extern volatile uart_status_t			status;
 
 	// Place the following macro at the correct interrupt vector

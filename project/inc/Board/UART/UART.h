@@ -2,28 +2,51 @@
 #define	_UART_H
 
     #include "UART_include.h"
-    #include "UART_internal.h"
 	#include "UART_types.h"
 
-    /// Inicializar el puerto serial
+    /**
+     * @brief Initialize internal state machine
+     * */
     extern void UART_init(void);
 
-    /// Inicializar el puerto serial
-    extern void UART_open(unsigned long);
+    /**
+     * @brief Initialize peripheral
+     * */
+    extern void UART_open(uart_baudrate);
 
-    /// Comenzar una transmision
-    extern uart_status_t UART_TransmitAsync(const void* , uart_buffer_size_t);
+    /**
+     * @brief Send a buffer of bytes using interrupts
+     * */
+    extern uart_status_t UART_TransmitAsync(const uart_byte* , uart_buffer_size_t);
 
-	extern uart_status_t UART_TransmitSync(const void* , uart_buffer_size_t);
+    /**
+     * @brief Send a buffer of bytes and halt until operation finishes
+     * */
+	extern uart_status_t UART_TransmitSync(const uart_byte* , uart_buffer_size_t);
 
+    /**
+     * @brief Cancel an ongoing transmission
+     * */
     extern uart_status_t UART_CancelTransmit(void);
 
-    /// Comenzar una recepcion
-    extern uart_status_t UART_Receive(void* , uart_buffer_size_t);
+    /**
+     * @brief Receive bytes using interrupts
+     * */
+    extern uart_status_t UART_ReceiveAsync(uart_byte* , uart_buffer_size_t);
 
+    /**
+     * @brief Receive bytes and halt until operation finishes
+     * */
+    extern uart_status_t UART_ReceiveSync(uart_byte* , uart_buffer_size_t);
+    
+    /**
+     * @brief Cancel an ongoing reception
+     * */
     extern uart_status_t UART_CancelReceive(void);
 
-    /// Solicitar el estado de la transferencia
+    /**
+     * @brief Request driver status (see UART bit flags)
+     * */
     extern uart_status_t UART_Status(void);
     
 #endif

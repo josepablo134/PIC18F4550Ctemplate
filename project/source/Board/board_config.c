@@ -1,21 +1,6 @@
 #include "../../inc/Board/board_config.h"
-#include "../../inc/project_macros.h"
-#include "../../inc/bldrCtl/bldrCtl_cfg.h"
-#include "../../inc/Board/UART/UART.h"
-
-#define T1_SCK_FREQ             32768U
-#define T1_SCK_DIV              1U
-#define T1_FREQ                 (T1_SCK_FREQ/T1_SCK_DIV)
-#define T1_MAX_VAL              65536U
-#define T1_1MS                  (T1_FREQ/1000U)
-#define T1_SYSTICK_PRECHARGE    ((uint16_t)T1_MAX_VAL - T1_1MS)
-
-#define TMR1_ISR()              {\
-    if( PIR1bits.TMR1IF ){\
-        TMR1 += ((uint16_t)T1_SYSTICK_PRECHARGE);\
-        PIR1bits.TMR1IF = 0;\
-    }\
-}
+#include "../../inc/Board/UART/UART_internal.h"
+#include "../../inc/Board/Timer1/Timer1_internal.h"
 
 void __interrupt(high_priority) Board_HP_ISR(void){
     if( PIR1bits.TMR1IF ){

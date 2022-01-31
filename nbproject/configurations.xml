@@ -30,6 +30,7 @@
               <itemPath>project/inc/Board/Timer1/Timer1.h</itemPath>
               <itemPath>project/inc/Board/Timer1/Timer1_types.h</itemPath>
               <itemPath>project/inc/Board/Timer1/Timer1_include.h</itemPath>
+              <itemPath>project/inc/Board/Timer1/Timer1_internal.h</itemPath>
             </logicalFolder>
             <logicalFolder name="UART" displayName="UART" projectFiles="true">
               <itemPath>project/inc/Board/UART/UART.h</itemPath>
@@ -99,7 +100,7 @@
         <targetDevice>PIC18F4550</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.31</languageToolchainVersion>
         <platform>3</platform>
