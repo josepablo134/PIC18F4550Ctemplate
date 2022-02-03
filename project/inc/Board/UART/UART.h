@@ -4,15 +4,19 @@
     #include "UART_include.h"
 	#include "UART_types.h"
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
     /**
      * @brief Initialize internal state machine
      * */
-    extern void UART_init(void);
+    extern void UART_Init(void);
 
     /**
      * @brief Initialize peripheral
      * */
-    extern void UART_open(uart_baudrate);
+    extern void UART_Open(uart_baudrate);
 
     /**
      * @brief Send a buffer of bytes using interrupts
@@ -48,5 +52,9 @@
      * @brief Request driver status (see UART bit flags)
      * */
     extern uart_status_t UART_Status(void);
-    
+
+#ifdef	__cplusplus
+}
+#endif
+
 #endif

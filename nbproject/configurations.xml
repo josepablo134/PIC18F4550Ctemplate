@@ -25,6 +25,11 @@
               <itemPath>project/inc/Board/flashCtl/flash_cfg.h</itemPath>
               <itemPath>project/inc/Board/flashCtl/flash_types.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="f1" displayName="Mcu" projectFiles="true">
+              <itemPath>project/inc/Board/Mcu/Mcu.h</itemPath>
+              <itemPath>project/inc/Board/Mcu/Mcu_include.h</itemPath>
+              <itemPath>project/inc/Board/Mcu/Mcu_cfg.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="Timer1" displayName="Timer1" projectFiles="true">
               <itemPath>project/inc/Board/Timer1/Timer1_cfg.h</itemPath>
               <itemPath>project/inc/Board/Timer1/Timer1.h</itemPath>
@@ -45,6 +50,7 @@
             <itemPath>project/inc/Keypad/keypad_types.h</itemPath>
             <itemPath>project/inc/Keypad/keypad_include.h</itemPath>
             <itemPath>project/inc/Keypad/keypad.h</itemPath>
+            <itemPath>project/inc/Keypad/Keypad_cfg.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="utils" projectFiles="true">
             <itemPath>project/inc/utils/utils.h</itemPath>
@@ -60,6 +66,9 @@
           <logicalFolder name="Board" displayName="Board" projectFiles="true">
             <logicalFolder name="flashCtl" displayName="flashCtl" projectFiles="true">
               <itemPath>project/source/Board/flashCtl/flash.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="Mcu" projectFiles="true">
+              <itemPath>project/source/Board/Mcu/Mcu.c</itemPath>
             </logicalFolder>
             <logicalFolder name="Timer1" displayName="Timer1" projectFiles="true">
               <itemPath>project/source/Board/Timer1/Timer1.c</itemPath>

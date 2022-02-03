@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "inc/Board/Mcu/Mcu.h"
 #include "inc/Board/UART/UART.h"
 #include "inc/Board/Timer1/Timer1.h"
 #include "inc/Keypad/Keypad.h"
@@ -18,32 +19,39 @@
 char msg[MSG_BUFF_LEN] = "Hello world!!\n";
 
 void main(void) {
+    Keypad_key_t key;
+    char keyChar;
+    
+    /// Port b change interrupt configured here
     Board_Init();
-    
-    UART_init();
-    UART_open( 115200U );
-    
-    UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
-    
-    while( 1 ){
-#if 0
-        UART_ReceiveSync( (uart_byte*) msg , 1U );
-        UART_TransmitSync( (const uart_byte*)msg , 1U );
-#else
-            while( UART_Status() ){}
-        UART_ReceiveAsync( (uart_byte*) msg , 1U );
-            while( UART_Status() ){}
-        UART_TransmitAsync( (const uart_byte*)msg , 1U );
-#endif
-    }
-    
-	Timer1_Init();
-	Timer1_open( TMR1_CFG_DIV_1 , TMR1_CFG_CLOCK_EXTERNAL );
-    Timer1_load( 65503U );
-	Timer1_start();
+    Keypad_Init();
+    UART_Init();
 
+    UART_Open( 115200 );
+    UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
+    strcpy( msg , "Key pressed : [x] [xx]\r\n" );
+    
+    Keypad_Open();
+
+    /// Enable change on port b interrupt
+    INTCON2 = 0x00U;
+    INTCON2bits.RBIP = 1U;/// High priority interrupt
+    PORTB = 0x00;///In order to clear RBIF (datasheet page 116)
+    INTCONbits.RBIF = 0U;
+    INTCONbits.RBIE = 1U;
     while(1){
-        LATAbits.LA2 = !PORTAbits.RA2;
-        __delay_ms( 100 );
+        LATAbits.LA3 = !PORTAbits.RA3;
+
+        key = Keypad_captureKey();
+        keyChar = Keypad_Key2Ascii( key );
+        if( KEYPAD_CFG_INVALID_CHAR != keyChar ){
+            msg[ 15 ] = keyChar;
+            msg[ 19 ] = int2hex_ascii[ key >> 4U ];
+            msg[ 20 ] = int2hex_ascii[ key & 0x0F ];
+            UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
+        }
+        
+        Mcu_Sleep(); /// Wait for port b interrupt
+        __delay_ms( 30 );/// Debounce time
     }
 }

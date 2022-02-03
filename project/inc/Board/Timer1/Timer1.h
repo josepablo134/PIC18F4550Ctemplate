@@ -10,15 +10,15 @@ extern "C" {
 
 void Timer1_Init(void);
 
-void Timer1_open( timer1_cfg_div , timer1_cfg_clock_source );
+void Timer1_Open( timer1_cfg_div , timer1_cfg_clock_source );
 
-void Timer1_load( timer1_val_t );
+void Timer1_Load( timer1_val_t );
 
-void Timer1_start(void);
+void Timer1_Start(void);
 
-void Timer1_stop(void);
+void Timer1_Stop(void);
 
-timer1_val_t Timer1_read(void);
+timer1_val_t Timer1_Read(void);
 
 #ifdef	__cplusplus
 }

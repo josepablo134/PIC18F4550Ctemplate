@@ -1,48 +1,84 @@
 #include "../../inc/Keypad/Keypad.h"
 
-void Keypad_init(){
-    /// Internal weak pull-up enabled
-    // Only affects input bits
+static const char keypad_keymap[ KEYPAD_CFG_ROWS ][ KEYPAD_CFG_COLUMNS ] = \
+KEYPAD_CFG_KEYPAD_KEYMAP_CONST;
+
+void Keypad_Init(){
+    /* Nothing to do here */
+}
+
+void Keypad_Open(void){
+    ADCON1 |= 0x06; /// Set pins AN8 through AN12 as digital
     PORTB = 0x00;
-    LATB = 0x00;
-    TRISB = 0x0F;
+    TRISB = 0xF0;
+    LATB = 0xF0;///Pull-up control
+    // Internal weak pull-up enabled
+    // Only affects input bits
     INTCON2bits.NOT_RBPU = 0;
 }
 
 Keypad_key_t Keypad_captureKey(){
-    Keypad_key_t key;
+    Keypad_key_t key = 0U;
+
+#if 0 
+    /*
+     * Keypad_Open configures this
+     * so is no longer necessary.
+     */
+    TRISB = 0xF0;
+    LATB = 0xF0;///Pull-up control
+    __delay_us( KEYPAD_CFG_MIN_READ_DELAY_US );
+#endif
+    key |= PORTB & 0xF0;
 
     TRISB = 0x0F;
     LATB = 0x0F;///Pull-up control
-    key = PORTB & 0x0F;
+    __delay_us( KEYPAD_CFG_MIN_READ_DELAY_US );
+    key |= PORTB & 0x0F;
 
+    /* Restart original port configuration */
     TRISB = 0xF0;
     LATB = 0xF0;///Pull-up control
-    key |= PORTB & 0xF0;
-    
     /// Pressed = 1, unpress = 0
     key = ~key;
     return key;
 }
 
-char Keypad_key2ascii( Keypad_key_t key ){
-    const char key2ascii[ 16U ] = {
-        '1','2','3','A',
-        '4','5','6','B',
-        '7','8','9','C',
-        '*','0','#','D'
-    };
-    char kchar = ' ';
-    if( key ){
-        uint8_t index;
-        uint8_t byte = key & 0x0F;
-
-        index = ( ( byte > 8 )? 3 : byte>>1U ) + 1U;
-        byte = key >> 4U;
-        index *= ( ( byte > 8 )? 3 : byte>>1U ) + 1U;
-        
-        index -= 1;
-        kchar = key2ascii[ index ];
+Keypad_key_index_t Keypad_Nibble2BitIndex( Keypad_nibble_t nibble ){
+    Keypad_key_index_t retVal;
+    switch( nibble ){
+        case 0x01:
+            retVal = 0x00;
+            break;
+        case 0x02:
+            retVal = 0x01;
+            break;
+        case 0x04:
+            retVal = 0x02;
+            break;
+        case 0x08:
+            retVal = 0x03;
+            break;
+        default:
+            retVal = KEYPAD_KEY_INDEX_INVALID;
     }
-    return kchar;
+    return retVal;
+}
+
+char Keypad_Key2Ascii( Keypad_key_t key ){
+    char retVal = KEYPAD_CFG_INVALID_CHAR;
+    
+    Keypad_key_index_t rowI = Keypad_Nibble2BitIndex(
+            (Keypad_nibble_t)(key & 0x0F) );
+    Keypad_key_index_t colI = Keypad_Nibble2BitIndex(
+                (Keypad_nibble_t)( (key>>4U) & 0x0F) );
+    
+    if( (KEYPAD_KEY_INDEX_INVALID != rowI) &&
+            (KEYPAD_KEY_INDEX_INVALID != colI) ){
+        retVal = keypad_keymap[rowI][colI];
+    }else{
+        retVal = KEYPAD_CFG_INVALID_CHAR;
+    }
+    
+    return retVal;
 }

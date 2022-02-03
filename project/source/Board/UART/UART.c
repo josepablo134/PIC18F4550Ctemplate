@@ -21,14 +21,14 @@ static void UART_internalReceiveSync(uart_byte* buffer,
 /*****************************************************************************
  *  Public interfaces definition
  *****************************************************************************/
-void UART_init(){
+void UART_Init(){
     status = 0x00;
     pTx = pRx = 0x00;
     iTx = iRx = 0x00;
     return;
 }
 
-void UART_open(uart_baudrate baud){
+void UART_Open(uart_baudrate baud){
     uint16_t buffer;
     //Configurar pines
     //TX(C6) - RX(C7)

@@ -9,7 +9,7 @@ void Timer1_Init(){
     PIR1bits.TMR1IF = 0; // Interrupt flag
 }
 
-void Timer1_open( timer1_cfg_div prescaler , timer1_cfg_clock_source clock ){
+void Timer1_Open( timer1_cfg_div prescaler , timer1_cfg_clock_source clock ){
 	T1CON = 0x00U;
     switch( clock ){
 			case TMR1_CFG_CLOCK_EXTERNAL:
@@ -40,25 +40,25 @@ void Timer1_open( timer1_cfg_div prescaler , timer1_cfg_clock_source clock ){
     #endif
 }
 
-void Timer1_load( timer1_val_t time ){
+void Timer1_Load( timer1_val_t time ){
     time = (uint16_t)(-1) - time;
     TMR1H = (uint8_t)( time >> 8U );
     TMR1L = (uint8_t)( time & 0xFFU );
 }
 
-void Timer1_start(){
+void Timer1_Start(){
     /// Start incrementing timer and enable interrupt
     PIE1bits.TMR1IE = 1;
     T1CONbits.TMR1ON = 1;
 }
 
-void Timer1_stop(){
+void Timer1_Stop(){
     /// Stop timer and disable interrupt
     PIE1bits.TMR1IE = 0;
     T1CONbits.TMR1ON = 0;
 }
 
-timer1_val_t Timer1_read(){
+timer1_val_t Timer1_Read(){
 	uint16_t tmr1_val;
 	tmr1_val = (uint16_t) TMR1L;
 	tmr1_val = tmr1_val | (uint16_t)(TMR1H<<8U);

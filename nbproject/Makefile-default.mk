@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=project/source/bldrCtl/bldrCtl.c project/source/Board/flashCtl/flash.c project/source/Board/Timer1/Timer1.c project/source/Board/UART/UART.c project/source/Board/board_config.c project/source/Keypad/keypad.c project/source/utils/utils.c project/source/project_macros.c project/main.c
+SOURCEFILES_QUOTED_IF_SPACED=project/source/bldrCtl/bldrCtl.c project/source/Board/flashCtl/flash.c project/source/Board/Timer1/Timer1.c project/source/Board/UART/UART.c project/source/Board/board_config.c project/source/Keypad/keypad.c project/source/utils/utils.c project/source/project_macros.c project/main.c project/source/Board/Mcu/Mcu.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1 ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1 ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1 ${OBJECTDIR}/project/source/Board/UART/UART.p1 ${OBJECTDIR}/project/source/Board/board_config.p1 ${OBJECTDIR}/project/source/Keypad/keypad.p1 ${OBJECTDIR}/project/source/utils/utils.p1 ${OBJECTDIR}/project/source/project_macros.p1 ${OBJECTDIR}/project/main.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1.d ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1.d ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1.d ${OBJECTDIR}/project/source/Board/UART/UART.p1.d ${OBJECTDIR}/project/source/Board/board_config.p1.d ${OBJECTDIR}/project/source/Keypad/keypad.p1.d ${OBJECTDIR}/project/source/utils/utils.p1.d ${OBJECTDIR}/project/source/project_macros.p1.d ${OBJECTDIR}/project/main.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1 ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1 ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1 ${OBJECTDIR}/project/source/Board/UART/UART.p1 ${OBJECTDIR}/project/source/Board/board_config.p1 ${OBJECTDIR}/project/source/Keypad/keypad.p1 ${OBJECTDIR}/project/source/utils/utils.p1 ${OBJECTDIR}/project/source/project_macros.p1 ${OBJECTDIR}/project/main.p1 ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1.d ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1.d ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1.d ${OBJECTDIR}/project/source/Board/UART/UART.p1.d ${OBJECTDIR}/project/source/Board/board_config.p1.d ${OBJECTDIR}/project/source/Keypad/keypad.p1.d ${OBJECTDIR}/project/source/utils/utils.p1.d ${OBJECTDIR}/project/source/project_macros.p1.d ${OBJECTDIR}/project/main.p1.d ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1 ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1 ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1 ${OBJECTDIR}/project/source/Board/UART/UART.p1 ${OBJECTDIR}/project/source/Board/board_config.p1 ${OBJECTDIR}/project/source/Keypad/keypad.p1 ${OBJECTDIR}/project/source/utils/utils.p1 ${OBJECTDIR}/project/source/project_macros.p1 ${OBJECTDIR}/project/main.p1
+OBJECTFILES=${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1 ${OBJECTDIR}/project/source/Board/flashCtl/flash.p1 ${OBJECTDIR}/project/source/Board/Timer1/Timer1.p1 ${OBJECTDIR}/project/source/Board/UART/UART.p1 ${OBJECTDIR}/project/source/Board/board_config.p1 ${OBJECTDIR}/project/source/Keypad/keypad.p1 ${OBJECTDIR}/project/source/utils/utils.p1 ${OBJECTDIR}/project/source/project_macros.p1 ${OBJECTDIR}/project/main.p1 ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1
 
 # Source Files
-SOURCEFILES=project/source/bldrCtl/bldrCtl.c project/source/Board/flashCtl/flash.c project/source/Board/Timer1/Timer1.c project/source/Board/UART/UART.c project/source/Board/board_config.c project/source/Keypad/keypad.c project/source/utils/utils.c project/source/project_macros.c project/main.c
+SOURCEFILES=project/source/bldrCtl/bldrCtl.c project/source/Board/flashCtl/flash.c project/source/Board/Timer1/Timer1.c project/source/Board/UART/UART.c project/source/Board/board_config.c project/source/Keypad/keypad.c project/source/utils/utils.c project/source/project_macros.c project/main.c project/source/Board/Mcu/Mcu.c
 
 
 
@@ -166,6 +166,14 @@ ${OBJECTDIR}/project/main.p1: project/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/project/main.d ${OBJECTDIR}/project/main.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/project/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1: project/source/Board/Mcu/Mcu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/project/source/Board/Mcu" 
+	@${RM} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d 
+	@${RM} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=0 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1 project/source/Board/Mcu/Mcu.c 
+	@-${MV} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.d ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/project/source/bldrCtl/bldrCtl.p1: project/source/bldrCtl/bldrCtl.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/project/source/bldrCtl" 
@@ -238,6 +246,14 @@ ${OBJECTDIR}/project/main.p1: project/main.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=0 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/project/main.p1 project/main.c 
 	@-${MV} ${OBJECTDIR}/project/main.d ${OBJECTDIR}/project/main.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/project/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1: project/source/Board/Mcu/Mcu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/project/source/Board/Mcu" 
+	@${RM} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d 
+	@${RM} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=0 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1 project/source/Board/Mcu/Mcu.c 
+	@-${MV} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.d ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/project/source/Board/Mcu/Mcu.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

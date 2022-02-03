@@ -9,4 +9,4 @@
     #define BLDR_CFG_APPL_HIGH_PRIOR_ISR    (0x808U)
     #define BLDR_CFG_APPL_LOW_PRIOR_ISR     (0x818U)
 
-#endif	/* XC_HEADER_TEMPLATE_H */
+#endif
