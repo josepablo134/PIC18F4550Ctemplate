@@ -1,3 +1,5 @@
+nbproject/*.properties
+nbproject/*.mk
 build/*
 dist/*
 nbproject/Makefile-default.mk
