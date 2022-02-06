@@ -15,6 +15,9 @@
 #include "inc/Keypad/Keypad.h"
 #include "inc/utils/utils.h"
 
+#include "inc/Board/Adc/Adc.h"
+#include "inc/Board/Pwm/Pwm.h"
+
 #define MSG_BUFF_LEN    100
 char msg[MSG_BUFF_LEN] = "Hello world!!\n";
 
@@ -26,6 +29,11 @@ void main(void) {
     Board_Init();
     Keypad_Init();
     UART_Init();
+    
+    Pwm_Init();
+    Pwm_Open();
+    Pwm_Enable();
+    Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) 512U );
 
     UART_Open( 115200 );
     UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );

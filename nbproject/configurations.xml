@@ -20,6 +20,12 @@
             <itemPath>project/inc/bldrCtl/bldrCtl_types.h</itemPath>
           </logicalFolder>
           <logicalFolder name="Board" displayName="Board" projectFiles="true">
+            <logicalFolder name="Adc" displayName="Adc" projectFiles="true">
+              <itemPath>project/inc/Board/Adc/Adc.h</itemPath>
+              <itemPath>project/inc/Board/Adc/Adc_cfg.h</itemPath>
+              <itemPath>project/inc/Board/Adc/Adc_include.h</itemPath>
+              <itemPath>project/inc/Board/Adc/Adc_types.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="flashCtl" displayName="flashCtl" projectFiles="true">
               <itemPath>project/inc/Board/flashCtl/flash.h</itemPath>
               <itemPath>project/inc/Board/flashCtl/flash_cfg.h</itemPath>
@@ -29,6 +35,12 @@
               <itemPath>project/inc/Board/Mcu/Mcu.h</itemPath>
               <itemPath>project/inc/Board/Mcu/Mcu_include.h</itemPath>
               <itemPath>project/inc/Board/Mcu/Mcu_cfg.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="Pwm" displayName="Pwm" projectFiles="true">
+              <itemPath>project/inc/Board/Pwm/Pwm.h</itemPath>
+              <itemPath>project/inc/Board/Pwm/Pwm_cfg.h</itemPath>
+              <itemPath>project/inc/Board/Pwm/Pwm_include.h</itemPath>
+              <itemPath>project/inc/Board/Pwm/Pwm_types.h</itemPath>
             </logicalFolder>
             <logicalFolder name="Timer1" displayName="Timer1" projectFiles="true">
               <itemPath>project/inc/Board/Timer1/Timer1_cfg.h</itemPath>
@@ -64,11 +76,17 @@
             <itemPath>project/source/bldrCtl/bldrCtl.c</itemPath>
           </logicalFolder>
           <logicalFolder name="Board" displayName="Board" projectFiles="true">
+            <logicalFolder name="Adc" displayName="Adc" projectFiles="true">
+              <itemPath>project/source/Board/Adc/Adc.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="flashCtl" displayName="flashCtl" projectFiles="true">
               <itemPath>project/source/Board/flashCtl/flash.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="Mcu" projectFiles="true">
               <itemPath>project/source/Board/Mcu/Mcu.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="Pwm" displayName="Pwm" projectFiles="true">
+              <itemPath>project/source/Board/Pwm/Pwm.c</itemPath>
             </logicalFolder>
             <logicalFolder name="Timer1" displayName="Timer1" projectFiles="true">
               <itemPath>project/source/Board/Timer1/Timer1.c</itemPath>
@@ -115,7 +133,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC18Fxxxx_DFP" vendor="Microchip" version="1.2.26"/>
+        <pack name="PIC18Fxxxx_DFP" vendor="Microchip" version="1.1.19"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>

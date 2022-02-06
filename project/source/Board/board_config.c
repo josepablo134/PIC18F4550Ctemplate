@@ -9,6 +9,7 @@ void __interrupt(high_priority) Board_HP_ISR(void){
     }
     if( INTCONbits.RBIF ){
         LATAbits.LA4 = !PORTAbits.RA4;
+        //INTCONbits.RBIE = 0U;
         PORTB = 0x00;
         INTCONbits.RBIF = 0U;
     }
