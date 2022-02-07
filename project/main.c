@@ -42,7 +42,6 @@ void main(void) {
     Pwm_Init();
     Pwm_Open();
     Pwm_Enable();
-    Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) 512U );
 
     UART_Open( 115200 );
     UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
@@ -58,6 +57,7 @@ void main(void) {
     INTCONbits.RBIE = 1U;
     while(1){
         counts = Adc_getCounts();
+        Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) counts );
         Adc_ConvertAsync( Adc_Ch_0 );
         Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel(Dio_ch_0) );
 
