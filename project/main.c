@@ -9,27 +9,32 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "inc/Board/Adc/Adc.h"
+#include "inc/Board/Dio/Dio.h"
 #include "inc/Board/Mcu/Mcu.h"
-#include "inc/Board/UART/UART.h"
+#include "inc/Board/Pwm/Pwm.h"
 #include "inc/Board/Timer1/Timer1.h"
+#include "inc/Board/UART/UART.h"
+
 #include "inc/Keypad/Keypad.h"
 #include "inc/utils/utils.h"
 
-#include "inc/Board/Adc/Adc.h"
-#include "inc/Board/Pwm/Pwm.h"
-
-#define MSG_BUFF_LEN    100
+#define MSG_BUFF_LEN    30
 char msg[MSG_BUFF_LEN] = "Hello world!!\n";
 
 void main(void) {
     Keypad_key_t key;
     char keyChar;
-    
+
     /// Port b change interrupt configured here
     Board_Init();
     Keypad_Init();
     UART_Init();
-    
+
+    Dio_Init();
+    Dio_Open();
+    Dio_WriteChannel( Dio_ch_0 , Dio_HIGH );
+
     Pwm_Init();
     Pwm_Open();
     Pwm_Enable();
@@ -58,7 +63,7 @@ void main(void) {
             msg[ 20 ] = int2hex_ascii[ key & 0x0F ];
             UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
         }
-        
+
         Mcu_Sleep(); /// Wait for port b interrupt
         __delay_ms( 30 );/// Debounce time
     }
