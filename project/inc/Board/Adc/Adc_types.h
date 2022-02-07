@@ -9,8 +9,8 @@
 			Adc_uninit,
 	}AdcStatus_t;
 
-	typedef uint8_t Adc_Channel;
-	typedef uint16_t Adc_Counts_t;
+	typedef uint8_t AdcChannel_t;
+	typedef uint16_t AdcCounts_t;
 
 #endif
 

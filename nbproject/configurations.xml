@@ -26,6 +26,12 @@
               <itemPath>project/inc/Board/Adc/Adc_include.h</itemPath>
               <itemPath>project/inc/Board/Adc/Adc_types.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="Dio" displayName="Dio" projectFiles="true">
+              <itemPath>project/inc/Board/Dio/Dio_cfg.h</itemPath>
+              <itemPath>project/inc/Board/Dio/Dio_include.h</itemPath>
+              <itemPath>project/inc/Board/Dio/Dio_types.h</itemPath>
+              <itemPath>project/inc/Board/Dio/Dio.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="flashCtl" displayName="flashCtl" projectFiles="true">
               <itemPath>project/inc/Board/flashCtl/flash.h</itemPath>
               <itemPath>project/inc/Board/flashCtl/flash_cfg.h</itemPath>
@@ -79,6 +85,9 @@
             <logicalFolder name="Adc" displayName="Adc" projectFiles="true">
               <itemPath>project/source/Board/Adc/Adc.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="Dio" displayName="Dio" projectFiles="true">
+              <itemPath>project/source/Board/Dio/Dio.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="flashCtl" displayName="flashCtl" projectFiles="true">
               <itemPath>project/source/Board/flashCtl/flash.c</itemPath>
             </logicalFolder>
@@ -127,7 +136,7 @@
         <targetDevice>PIC18F4550</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.32</languageToolchainVersion>
         <platform>2</platform>
