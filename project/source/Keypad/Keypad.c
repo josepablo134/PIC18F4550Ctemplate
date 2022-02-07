@@ -8,7 +8,7 @@ void Keypad_Init(){
 }
 
 void Keypad_Open(void){
-    ADCON1 |= 0x06; /// Set pins AN8 through AN12 as digital
+    /// ADCON1 is handled by ADC driver
     PORTB = 0x00;
     TRISB = 0xF0;
     LATB = 0xF0;///Pull-up control

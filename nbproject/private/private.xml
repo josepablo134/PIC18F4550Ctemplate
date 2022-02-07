@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/josep/Documents/Dev/Embedded/PIC18/git/PIC18F4550Ctemplate/project/inc/Board/Adc/Adc_types.h</file>
+            <file>file:/D:/josep/Documents/Dev/Embedded/PIC18/git/PIC18F4550Ctemplate/project/inc/Board/Adc/Adc_cfg.h</file>
+            <file>file:/D:/josep/Documents/Dev/Embedded/PIC18/git/PIC18F4550Ctemplate/project/main.c</file>
+            <file>file:/D:/josep/Documents/Dev/Embedded/PIC18/git/PIC18F4550Ctemplate/project/inc/Board/Adc/Adc_Internal.h</file>
+            <file>file:/D:/josep/Documents/Dev/Embedded/PIC18/git/PIC18F4550Ctemplate/project/source/Board/Adc/Adc.c</file>
+        </group>
     </open-files>
 </project-private>

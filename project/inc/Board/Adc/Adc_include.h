@@ -3,6 +3,7 @@
 
     #include <stdint.h>
     #include "../board_config.h"
+    #include "../../project_macros.h"
 
 #endif
 

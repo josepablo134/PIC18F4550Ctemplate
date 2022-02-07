@@ -177,7 +177,7 @@ static void UART_internalTransmitAsync(const uart_byte* buffer, uart_buffer_size
     pTx = (void*) buffer;
     iTx = size;
     status |= TX_BUSY;
-    PIE1bits.TX1IE = 1;/// Enable TX interrupt
+    PIE1bits.TX1IE = 1U;/// Enable TX interrupt
 }
 
 static void UART_internalTransmitSync(const uart_byte* buffer, uart_buffer_size_t size){
@@ -188,10 +188,11 @@ static void UART_internalTransmitSync(const uart_byte* buffer, uart_buffer_size_
 	while( iTx ){
 		if(PIR1bits.TXIF){
             TXREG = *pTx;
-            *pTx++;
+            pTx++;
 			iTx--;
 		}
 	}
+    while( !PIR1bits.TXIF ){}
     // Clear TX BUSY flag
     status &= RX_MASK;
 }
@@ -200,7 +201,11 @@ static void UART_internalReceiveAsync(uart_byte* buffer, uart_buffer_size_t size
     pRx = buffer;
     iRx = size;
     status |= RX_BUSY;
-    PIE1bits.RC1IE = 1;/// Enable RX interrupt
+
+    /// Clear interrupt flag
+    PIR1bits.RC1IF = 0U;*pRx = RCREG;
+
+    PIE1bits.RC1IE = 1U;/// Enable RX interrupt
 }
 
 static void UART_internalReceiveSync(uart_byte* buffer, uart_buffer_size_t size){
@@ -208,10 +213,13 @@ static void UART_internalReceiveSync(uart_byte* buffer, uart_buffer_size_t size)
     iRx = size;
     // Set RX BUSY flag
     status |= RX_BUSY;
+
+    /// Clear interrupt flag
+    PIR1bits.RC1IF = 0U;*pRx = RCREG;
     while( iRx ){
         if(PIR1bits.RC1IF){
             *pRx = RCREG;
-            *pRx++;
+            pRx++;
             iRx--;
         }
     }

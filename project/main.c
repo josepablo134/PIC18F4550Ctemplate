@@ -24,12 +24,16 @@ char msg[MSG_BUFF_LEN] = "Hello world!!\n";
 
 void main(void) {
     Keypad_key_t key;
+    AdcCounts_t  counts;
     char keyChar;
 
     /// Port b change interrupt configured here
     Board_Init();
     Keypad_Init();
     UART_Init();
+
+    Adc_Init();
+    Adc_Open();
 
     Dio_Init();
     Dio_Open();
@@ -42,7 +46,7 @@ void main(void) {
 
     UART_Open( 115200 );
     UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
-    strcpy( msg , "Key pressed : [x] [xx]\r\n" );
+    strcpy( msg , "Key pressed : [x] [xxxx]\n" );
     
     Keypad_Open();
 
@@ -53,15 +57,19 @@ void main(void) {
     INTCONbits.RBIF = 0U;
     INTCONbits.RBIE = 1U;
     while(1){
-        LATAbits.LA3 = !PORTAbits.RA3;
+        counts = Adc_getCounts();
+        Adc_ConvertAsync( Adc_Ch_0 );
+        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel(Dio_ch_0) );
 
         key = Keypad_captureKey();
         keyChar = Keypad_Key2Ascii( key );
         if( KEYPAD_CFG_INVALID_CHAR != keyChar ){
             msg[ 15 ] = keyChar;
-            msg[ 19 ] = int2hex_ascii[ key >> 4U ];
-            msg[ 20 ] = int2hex_ascii[ key & 0x0F ];
-            UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
+            msg[ 19 ] = int2hex_ascii[ (counts >> 12U) & 0x0F ];
+            msg[ 20 ] = int2hex_ascii[ (counts >> 8U) & 0x0F ];
+            msg[ 21 ] = int2hex_ascii[ (counts >> 4U) & 0x0F ];
+            msg[ 22 ] = int2hex_ascii[ (counts & 0x0F) ];
+            UART_TransmitSync( (const uart_byte*) msg , strlen(msg) );
         }
 
         Mcu_Sleep(); /// Wait for port b interrupt

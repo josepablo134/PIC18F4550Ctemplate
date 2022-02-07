@@ -13,13 +13,15 @@ extern "C" {
 
 	extern void Adc_Open( void );
 
-	AdcCounts_t Adc_getCounts( AdcChannel_t channel );
+	AdcCounts_t Adc_getCounts(void);
 
-	AdcStatus_t Adc_Status( AdcChannel_t channel );
+	AdcStatus_t Adc_Status(void);
 
-	AdcStatus_t Adc_ReadSync( AdcChannel_t channel );
+	AdcStatus_t Adc_ConvertSync( AdcChannel_t channel );
 
-	AdcStatus_t Adc_ReadAsync( AdcChannel_t channel );
+	AdcStatus_t Adc_ConvertAsync( AdcChannel_t channel );
+
+    AdcStatus_t Adc_CancelRequest(void);
 
 #ifdef	__cplusplus
 }

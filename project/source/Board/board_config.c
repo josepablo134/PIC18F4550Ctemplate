@@ -2,6 +2,8 @@
 #include "../../inc/Board/Mcu/Mcu.h"
 #include "../../inc/Board/UART/UART_internal.h"
 #include "../../inc/Board/Timer1/Timer1_internal.h"
+#include "../../inc/Board/Adc/Adc_internal.h"
+
 
 void __interrupt(high_priority) Board_HP_ISR(void){
     if( PIR1bits.TMR1IF ){
@@ -17,6 +19,7 @@ void __interrupt(high_priority) Board_HP_ISR(void){
 
 void __interrupt(low_priority) Board_LP_ISR(void){
     UART_ISR();
+    ADC_ISR();
 }
 
 void Board_Init(){
