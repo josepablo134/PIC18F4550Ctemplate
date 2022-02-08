@@ -4,9 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/josepablocb/MPLABXProjects/PIC18Ctemplate.X/project/source/Board/SPI/SPI.c</file>
+            <file>file:/home/josepablocb/MPLABXProjects/PIC18Ctemplate.X/project/inc/Board/SPI/SPI.h</file>
             <file>file:/home/josepablocb/MPLABXProjects/PIC18Ctemplate.X/project/main.c</file>
-            <file>file:/home/josepablocb/MPLABXProjects/PIC18Ctemplate.X/project/inc/Board/SPI/SPI_internal.h</file>
-            <file>file:/home/josepablocb/MPLABXProjects/PIC18Ctemplate.X/project/source/Board/board_config.c</file>
         </group>
     </open-files>
 </project-private>
