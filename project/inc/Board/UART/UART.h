@@ -1,6 +1,10 @@
 #ifndef _UART_H
 #define	_UART_H
 
+#ifdef _SPI_H_
+    #error "This driver is not compatible with the SPI driver"
+#endif
+
     #include "UART_include.h"
 	#include "UART_types.h"
 

@@ -9,13 +9,13 @@
 extern "C" {
 #endif
 
-	void Dio_Init( void );
+	extern void Dio_Init( void );
 
-	void Dio_Open( void );
+	extern void Dio_Open( void );
 
-	DioLevel_t Dio_ReadChannel( DioChannel_t channel );
+	extern DioLevel_t Dio_ReadChannel( DioChannel_t channel );
 
-	void Dio_WriteChannel( DioChannel_t channel , DioLevel_t level );
+	extern void Dio_WriteChannel( DioChannel_t channel , DioLevel_t level );
 
 #ifdef	__cplusplus
 }

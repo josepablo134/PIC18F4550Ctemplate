@@ -59,7 +59,7 @@
      * (Datasheet, parameter 130 in Table 28-29)
      */
     #define ADC_CFG_REG_ADCON2_INIT     (\
-            ADC_CFG_REG_ADCON2_OPT_ADFM_LJ |\
+            ADC_CFG_REG_ADCON2_OPT_ADFM_RJ |\
             ADC_CFG_REG_ADCON2_OPT_ADCS_FRC0 |\
             ADC_CFG_REG_ADCON2_OPT_ACQT_2TAD \
             )

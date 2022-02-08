@@ -43,7 +43,8 @@ AdcStatus_t Adc_Status(){
 AdcStatus_t Adc_ConvertSync( AdcChannel_t channel ){
     ASSERT( Adc_uninit != AdcInternalState );
     ASSERT( channel < Adc_Ch_Max );
-    if( (Adc_ready == AdcInternalState) && (!ADCON0bits.NOT_DONE) ){
+    if( (Adc_ready == AdcInternalState || Adc_cancel == AdcInternalState)
+            && (!ADCON0bits.NOT_DONE) ){
         AdcInternalState = Adc_busy;
 
         ADCON0bits.CHS = channel;
@@ -62,7 +63,8 @@ AdcStatus_t Adc_ConvertSync( AdcChannel_t channel ){
 AdcStatus_t Adc_ConvertAsync( AdcChannel_t channel ){
     ASSERT( Adc_uninit != AdcInternalState );
     ASSERT( channel < Adc_Ch_Max );
-    if( (Adc_ready == AdcInternalState) && (!ADCON0bits.NOT_DONE) ){
+    if( (Adc_ready == AdcInternalState || Adc_cancel == AdcInternalState)
+            && (!ADCON0bits.NOT_DONE) ){
         AdcInternalState = Adc_busy;
 
         PIR1bits.ADIF = 0U;

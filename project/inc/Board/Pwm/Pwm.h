@@ -10,8 +10,6 @@ extern "C" {
 #endif
 	extern void Pwm_Init( void );
 	extern void Pwm_Open( void );
-    extern void Pwm_Enable( void );
-    extern void Pwm_Disable( void );
 	extern void Pwm_SetDutyCycle( Pwm_Channel_t channel,
             Pwm_DutyCycle_t dutycycle );
 #ifdef	__cplusplus

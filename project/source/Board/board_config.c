@@ -3,6 +3,7 @@
 #include "../../inc/Board/UART/UART_internal.h"
 #include "../../inc/Board/Timer1/Timer1_internal.h"
 #include "../../inc/Board/Adc/Adc_internal.h"
+#include "../../inc/Board/SPI/SPI_internal.h"
 
 
 void __interrupt(high_priority) Board_HP_ISR(void){
@@ -10,9 +11,6 @@ void __interrupt(high_priority) Board_HP_ISR(void){
         TMR1_ISR();
     }
     if( INTCONbits.RBIF ){
-        LATAbits.LA4 = !PORTAbits.RA4;
-        //INTCONbits.RBIE = 0U;
-        PORTB = 0x00;
         INTCONbits.RBIF = 0U;
     }
 }
@@ -20,12 +18,13 @@ void __interrupt(high_priority) Board_HP_ISR(void){
 void __interrupt(low_priority) Board_LP_ISR(void){
     UART_ISR();
     ADC_ISR();
+    SPI_ISR();
 }
 
 void Board_Init(){
     Mcu_Init();
     Mcu_Open();
-    
+
     /**
      * Enable PortA bit 4
      */
@@ -44,4 +43,13 @@ void Board_Init(){
     RCONbits.IPEN = 1U;
     INTCONbits.GIEH = 1U;
     INTCONbits.GIEL = 1U;
+
+    /**
+     * Enable Timer2 clock (FOSC/4)
+     * Used by PWM and SPI/IIC modules
+     */
+    T2CON = 0x00;
+    T2CONbits.TOUTPS = 0;// Postcale = 1
+    T2CONbits.T2CKPS = 0;// Prescaler = 1
+    T2CONbits.TMR2ON = 1;// Enable Timer2 clock
 }
