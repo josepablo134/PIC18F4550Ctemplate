@@ -23,14 +23,11 @@
 char msg[MSG_BUFF_LEN] = "Hello world!!\n";
 
 void main(void) {
-    Keypad_key_t key;
     AdcCounts_t  counts;
-    char keyChar;
 
-    /// Port b change interrupt configured here
     Board_Init();
-    Keypad_Init();
     UART_Init();
+    UART_Open( 115200 );
 
     Adc_Init();
     Adc_Open();
@@ -43,36 +40,13 @@ void main(void) {
     Pwm_Open();
     Pwm_Enable();
 
-    UART_Open( 115200 );
-    UART_TransmitSync( (const uart_byte*) msg , strlen( msg ) );
-    strcpy( msg , "Key pressed : [x] [xxxx]\n" );
-    
-    Keypad_Open();
-
-    /// Enable change on port b interrupt
-    INTCON2 = 0x00U;
-    INTCON2bits.RBIP = 1U;/// High priority interrupt
-    PORTB = 0x00;///In order to clear RBIF (datasheet page 116)
-    INTCONbits.RBIF = 0U;
-    INTCONbits.RBIE = 1U;
     while(1){
+        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel(Dio_ch_0) );
+        Adc_ConvertSync( Adc_Ch_0 );
         counts = Adc_getCounts();
         Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) counts );
-        Adc_ConvertAsync( Adc_Ch_0 );
-        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel(Dio_ch_0) );
-
-        key = Keypad_captureKey();
-        keyChar = Keypad_Key2Ascii( key );
-        if( KEYPAD_CFG_INVALID_CHAR != keyChar ){
-            msg[ 15 ] = keyChar;
-            msg[ 19 ] = int2hex_ascii[ (counts >> 12U) & 0x0F ];
-            msg[ 20 ] = int2hex_ascii[ (counts >> 8U) & 0x0F ];
-            msg[ 21 ] = int2hex_ascii[ (counts >> 4U) & 0x0F ];
-            msg[ 22 ] = int2hex_ascii[ (counts & 0x0F) ];
-            UART_TransmitSync( (const uart_byte*) msg , strlen(msg) );
-        }
-
-        Mcu_Sleep(); /// Wait for port b interrupt
+        UART_TransmitSync( (const uart_byte*) msg , strlen(msg) );
+        Mcu_Sleep(); /// Wait for any interrupt
         __delay_ms( 30 );/// Debounce time
     }
 }
