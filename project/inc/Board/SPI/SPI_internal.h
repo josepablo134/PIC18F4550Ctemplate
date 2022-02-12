@@ -41,6 +41,12 @@
                 }\
             } else {\
                 PIE1bits.SSPIE = 0U;\
+                SPI_SS_CHANNEL = 1U;\
+                __rxBuffer = NULL;\
+                __txBuffer = NULL;\
+                __rxSize = 0U;\
+                __txSize = 0U;\
+                SPI_internal_state = SPI_ready;\
             }\
         }\
 	}

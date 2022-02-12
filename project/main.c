@@ -29,9 +29,9 @@ void main(void) {
     AdcCounts_t  counts;
 	SPI_Transaction_t spiTransaction = {
 		.txBuffer = spiBuffer,
-		.rxBuffer = spiBuffer,
+		.rxBuffer = NULL,
 		.txSize = SPI_BUFF_LEN,
-		.rxSize = SPI_BUFF_LEN
+		.rxSize = 0u
 	};
 	memset( spiBuffer , 0xAAU , SPI_BUFF_LEN );
 
@@ -55,7 +55,7 @@ void main(void) {
         Adc_ConvertSync( Adc_Ch_0 );
         counts = Adc_getCounts();
         Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) counts );
-        SPI_TransactionSync( &spiTransaction );
+        SPI_TransactionAsync( &spiTransaction );
         __delay_ms( 500 );/// Debounce time
     }
 }
