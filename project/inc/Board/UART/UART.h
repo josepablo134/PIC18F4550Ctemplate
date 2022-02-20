@@ -4,6 +4,9 @@
 #ifdef _SPI_H_
     #error "This driver is not compatible with the SPI driver"
 #endif
+#ifdef _IIC_H_
+    #error "This driver is not compatible with the IIC driver"
+#endif
 
     #include "UART_include.h"
 	#include "UART_types.h"

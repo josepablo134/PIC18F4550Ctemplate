@@ -9,53 +9,83 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "inc/Board/Adc/Adc.h"
 #include "inc/Board/Dio/Dio.h"
-#include "inc/Board/Mcu/Mcu.h"
-#include "inc/Board/Pwm/Pwm.h"
-#include "inc/Board/SPI/SPI.h"
-#include "inc/Board/Timer1/Timer1.h"
+#include "inc/Board/IIC/IIC.h"
 
-#include "inc/Keypad/Keypad.h"
-#include "inc/utils/utils.h"
+#define ADXL345_SLAVE_ADDRESS           (0x53U << 1U)
 
-#define MSG_BUFF_LEN    30
-char msg[MSG_BUFF_LEN] = "Hello world!!\n";
+#define ADXL345_REG_DEV_ID              (0x00U)
+#define ADXL345_REG_POWER_CTL           (0x2DU)
+#define ADXL345_REG_DATA_FORMAT         (0x31U)
+#define ADXL345_REG_DATAX0              (0x32U)
+#define ADXL345_REG_DATAX1              (0x33U)
+#define ADXL345_REG_DATAY0              (0x34U)
+#define ADXL345_REG_DATAY1              (0x35U)
+#define ADXL345_REG_DATAZ0              (0x36U)
+#define ADXL345_REG_DATAZ1              (0x37U)
 
-#define SPI_BUFF_LEN    3U
-SPI_byte_t spiBuffer[MSG_BUFF_LEN];
+#define ADXL345_REG_DATA_FORMAT_SET     (0x01U)
+#define ADXL345_REG_POWER_CTL_SET       (0x08U)
+
+#define DUMMY_BYTE                      (0xFFU);
+
+#define BUFF_SIZE                       6U
+IIC_byte_t buffer[BUFF_SIZE];
 
 void main(void) {
-    AdcCounts_t  counts;
-	SPI_Transaction_t spiTransaction = {
-		.txBuffer = spiBuffer,
+	IIC_Transaction_t iicTransaction = {
+        .slave_address = (ADXL345_SLAVE_ADDRESS),
+		.txBuffer = NULL,
+		.txSize = 0U,
 		.rxBuffer = NULL,
-		.txSize = SPI_BUFF_LEN,
-		.rxSize = 0u
+		.rxSize = 0U
 	};
-	memset( spiBuffer , 0xAAU , SPI_BUFF_LEN );
 
     Board_Init();
 
-    Adc_Init();
-    Adc_Open();
-
     Dio_Init();
     Dio_Open();
+
+	IIC_Init();
+	IIC_Open();
+
     Dio_WriteChannel( Dio_ch_0 , Dio_HIGH );
 
-	SPI_Init();
-	SPI_Open();
+    /// Configure ADXL
+    buffer[0] = ADXL345_REG_POWER_CTL;
+    buffer[1] = ADXL345_REG_POWER_CTL_SET;/// +/- 4G range
+    iicTransaction.txBuffer = buffer;
+    iicTransaction.txSize = 2U;
+    IIC_TransactionSync( &iicTransaction );
 
-    Pwm_Init();
-    Pwm_Open();
-
+    buffer[0] = ADXL345_REG_DATA_FORMAT;
+    buffer[1] = ADXL345_REG_DATA_FORMAT_SET;/// Medition mode
+    iicTransaction.txBuffer = buffer;
+    iicTransaction.txSize = 2U;
+    IIC_TransactionSync( &iicTransaction );
     while(1){
-        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel(Dio_ch_0) );
-        Adc_ConvertSync( Adc_Ch_0 );
-        counts = Adc_getCounts();
-        Pwm_SetDutyCycle( Pwm_Ch_1 , (Pwm_DutyCycle_t) counts );
-        SPI_TransactionAsync( &spiTransaction );
+        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel( Dio_ch_0 ) );
+
+        /// READ ID from ADXL345 (expected 0xE5U)
+        buffer[0] = ADXL345_REG_DEV_ID;
+            iicTransaction.txBuffer = buffer;
+            iicTransaction.txSize = 1U;
+            iicTransaction.rxBuffer = buffer;
+            iicTransaction.rxSize = 1U;
+        IIC_TransactionSync( &iicTransaction );
+        if( 0xE5U == buffer[0] ){
+            LATAbits.LA4 = Dio_HIGH;
+        }else{
+            LATAbits.LA4 = Dio_LOW;
+        }
+
+        /// Read axis (from X0 buffer through Z1)
+        buffer[0] = ADXL345_REG_DATAX0;
+            iicTransaction.txBuffer = buffer;
+            iicTransaction.txSize = 1U;
+            iicTransaction.rxBuffer = buffer;
+            iicTransaction.rxSize = BUFF_SIZE;
+        IIC_TransactionSync( &iicTransaction );
         __delay_ms( 500 );/// Debounce time
     }
 }

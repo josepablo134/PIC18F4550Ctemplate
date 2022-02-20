@@ -2,7 +2,10 @@
 #define _SPI_H_
 
 #ifdef _UART_H_
-    #error "This driver is not compatible with UART driver"
+    #error "This driver is not compatible with the UART driver"
+#endif
+#ifdef _IIC_H_
+    #error "This driver is not compatible with the IIC driver"
 #endif
 
 	#include "SPI_cfg.h"
