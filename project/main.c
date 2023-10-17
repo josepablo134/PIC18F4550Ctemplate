@@ -33,6 +33,7 @@
 IIC_byte_t buffer[BUFF_SIZE];
 
 void main(void) {
+    uint8_t  dev_id=0x00;
 	IIC_Transaction_t iicTransaction = {
         .slave_address = (ADXL345_SLAVE_ADDRESS),
 		.txBuffer = NULL,
@@ -72,8 +73,13 @@ void main(void) {
             iicTransaction.txSize = 1U;
             iicTransaction.rxBuffer = buffer;
             iicTransaction.rxSize = 1U;
+        dev_id = 0x00;
         IIC_TransactionSync( &iicTransaction );
-        if( 0xE5U == buffer[0] ){
+        //IIC_TransactionAsync( &iicTransaction );
+        while( IIC_ready != IIC_getStatus() ){ }
+
+        dev_id = buffer[0];
+        if( 0xE5U == dev_id ){
             LATAbits.LA4 = Dio_HIGH;
         }else{
             LATAbits.LA4 = Dio_LOW;
@@ -86,6 +92,8 @@ void main(void) {
             iicTransaction.rxBuffer = buffer;
             iicTransaction.rxSize = BUFF_SIZE;
         IIC_TransactionSync( &iicTransaction );
+        //IIC_TransactionAsync( &iicTransaction );
+        while( IIC_ready != IIC_getStatus() ){ }
         __delay_ms( 500 );/// Debounce time
     }
 }

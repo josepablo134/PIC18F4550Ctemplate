@@ -11,6 +11,9 @@
 	extern volatile IIC_buffer_size_t  __i2c_rxSize;
 
 	#define IIC_ISR(){\
+		if( PIR1bits.SSPIF && ( IIC_busy == IIC_internal_state ) ){\
+			PIR1bits.SSPIF = 0U;\
+		}\
 	}
 
 #endif

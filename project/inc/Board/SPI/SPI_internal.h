@@ -11,7 +11,7 @@
 	extern volatile SPI_buffer_size_t  __rxSize;
 
 	#define SPI_ISR(){\
-		if( PIR1bits.SSPIF ){\
+		if( PIR1bits.SSPIF && ( SPI_busy == SPI_internal_state ) ){\
 			PIR1bits.SSPIF = 0U;\
             if( 0 < (__txSize + __rxSize) ){\
                 /* Save received byte*/\

@@ -21,7 +21,7 @@ extern "C" {
 
 	extern void IIC_Open( void );
 
-    extern IICState_t IIC_Status( void );
+    extern IICState_t IIC_getStatus( void );
 
     extern IICState_t IIC_CancelTransaction( void );
 

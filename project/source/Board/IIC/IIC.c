@@ -230,11 +230,11 @@ static void IIC_InternalTransactionSync( void ){
         PIR1bits.SSPIF = 0u;
         SSPCON2bits.RCEN = 1U;/// Receive mode
         
-        while( 0U < __i2c_rxSize ){
+        while( 1U < __i2c_rxSize ){
             if( 1U == PIR1bits.SSPIF ){
                 PIR1bits.SSPIF = 0U;
                     /// Write ACK to continue
-                    SSPCON2bits.ACKDT = 1U;
+                    SSPCON2bits.ACKDT = 0U;
                     SSPCON2bits.ACKEN = 1U;/// Send ACK to Slave
                     while( 0U == PIR1bits.SSPIF );
                     PIR1bits.SSPIF = 0u;
@@ -246,6 +246,16 @@ static void IIC_InternalTransactionSync( void ){
                 }
             }
         }
+        while( 0U == PIR1bits.SSPIF );
+        PIR1bits.SSPIF = 0u;
+        /// Write NACK to finish
+        SSPCON2bits.ACKDT = 1U;
+        SSPCON2bits.ACKEN = 1U;/// Send ACK/NACK to Slave
+            *__i2c_rxBuffer = SSPBUF;
+            __i2c_rxBuffer++;
+            __i2c_rxSize--;
+        while( 0U == PIR1bits.SSPIF );
+        PIR1bits.SSPIF = 0u;
     }
     
     /* Send Stop Bit */
