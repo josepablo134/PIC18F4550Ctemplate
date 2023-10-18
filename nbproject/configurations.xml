@@ -107,6 +107,7 @@
             </logicalFolder>
             <logicalFolder name="IIC" displayName="IIC" projectFiles="true">
               <itemPath>project/source/Board/IIC/IIC.c</itemPath>
+              <itemPath>project/source/Board/IIC/IIC_internal.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="Mcu" projectFiles="true">
               <itemPath>project/source/Board/Mcu/Mcu.c</itemPath>

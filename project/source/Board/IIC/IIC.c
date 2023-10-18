@@ -1,10 +1,8 @@
 #include "../../../inc/Board/IIC/IIC.h"
-
-#define I2C_SLAVE_ADDR_MASK     (0xFEU)
-#define I2C_WRITE_TO_SLAVE      (0U)
-#define I2C_READ_FROM_SLAVE     (1U)
+#include "../../../inc/Board/IIC/IIC_internal.h"
 
 volatile IICState_t IIC_internal_state = IIC_uninit;
+volatile IICIntTransactionState_t IIC_int_trans_state;
 volatile IIC_byte_t*        __i2c_txBuffer;
 volatile IIC_byte_t*        __i2c_rxBuffer;
 volatile IIC_buffer_size_t  __i2c_txSize;
@@ -66,10 +64,11 @@ IICState_t IIC_getStatus( void ){
 }
 
 IICState_t IIC_CancelTransaction( void ){
-	ASSERT( IIC_uninit == IIC_internal_state );
+    ASSERT( IIC_uninit == IIC_internal_state );
     if( IIC_ready != IIC_internal_state ){
         PIE1bits.SSPIE = 0U;
         PIR1bits.SSPIF = 0U;
+        SSPCON1bits.SSPEN = 0U;
         __i2c_rxBuffer = NULL;
         __i2c_txBuffer = NULL;
         __i2c_rxSize = 0U;
@@ -80,9 +79,9 @@ IICState_t IIC_CancelTransaction( void ){
 }
 
 IICState_t IIC_TransactionAsync( IIC_Transaction_t* transaction ){
-    if( IIC_ready == IIC_internal_state ||
-            IIC_cancel == IIC_internal_state ||
-            IIC_error == IIC_internal_state ){
+    if( (IIC_ready == IIC_internal_state) ||
+            (IIC_cancel == IIC_internal_state) ||
+            (IIC_error == IIC_internal_state) ){
         IIC_internal_state = IIC_ready;
         if( 0U < transaction->slave_address ){
             __i2c_address = (IIC_byte_t) I2C_SLAVE_ADDR_MASK & transaction->slave_address;
@@ -114,16 +113,16 @@ IICState_t IIC_TransactionAsync( IIC_Transaction_t* transaction ){
 }
 
 IICState_t IIC_TransactionSync( IIC_Transaction_t* transaction ){
-    if( IIC_ready == IIC_internal_state ||
-            IIC_cancel == IIC_internal_state ||
-            IIC_error == IIC_internal_state ){
+    if( (IIC_ready == IIC_internal_state) ||
+            (IIC_cancel == IIC_internal_state) ||
+            (IIC_error == IIC_internal_state) ){
         IIC_internal_state = IIC_ready;
         if( 0U < transaction->slave_address ){
             __i2c_address = I2C_SLAVE_ADDR_MASK & transaction->slave_address;
         }else{
             __i2c_address = 0x00U;
         }
-     	if( (NULL != transaction->txBuffer) && 0U < transaction->txSize ){
+         if( (NULL != transaction->txBuffer) && 0U < transaction->txSize ){
             __i2c_txBuffer = transaction->txBuffer;
             __i2c_txSize = transaction->txSize;
         }else{
@@ -140,6 +139,9 @@ IICState_t IIC_TransactionSync( IIC_Transaction_t* transaction ){
         /// Something to transmit?
         if( 0 < (__i2c_txSize + __i2c_rxSize) ){
             IIC_InternalTransactionSync();
+            if( IIC_error == IIC_internal_state ){
+                SSPCON1bits.SSPEN = 0U; // Cancel all transactions
+            }
         }
     }else{
         /* We can not proceed */
@@ -152,21 +154,31 @@ IICState_t IIC_TransactionSync( IIC_Transaction_t* transaction ){
  *****************************************************************************/
 
 static void IIC_InternalTransactionAsync( void ){
-	ASSERT( IIC_ready == IIC_internal_state );
-	ASSERT( 0 < (__i2c_txSize + __i2c_txSize) );
+    ASSERT( IIC_ready == IIC_internal_state );
+    ASSERT( 0U < (__i2c_txSize + __i2c_rxSize) );
+    ASSERT( 0U < (__i2c_address) );
+    SSPCON1bits.SSPEN = 1U;
+    IIC_internal_state = IIC_busy;
+    PIR1bits.SSPIF = 0U;
+    
+    /* Start Condition */
+    IIC_int_trans_state = IIC_start_bit;
+    SSPCON2bits.RCEN = 0U;/// Transmit mode
+    SSPCON2bits.SEN = 1U;// Start Bit
 
-	IIC_internal_state = IIC_busy;
-	PIR1bits.SSPIF = 0U;
-    /* Do something */
-	PIE1bits.SSPIE = 1U;
+    /**
+     * Rest will be handled in the interrupt.
+    */
+    PIE1bits.SSPIE = 1U;
 }
 
 static void IIC_InternalTransactionSync( void ){
     ASSERT( IIC_ready == IIC_internal_state );
-	ASSERT( 0U < (__i2c_txSize + __i2c_rxSize) );
+    ASSERT( 0U < (__i2c_txSize + __i2c_rxSize) );
     ASSERT( 0U < (__i2c_address) );
+    SSPCON1bits.SSPEN = 1U;
     IIC_internal_state = IIC_busy;
-	PIR1bits.SSPIF = 0U;
+    PIR1bits.SSPIF = 0U;
 
     /* Start Condition */
     SSPCON2bits.RCEN = 0U;/// Transmit mode
@@ -181,7 +193,7 @@ static void IIC_InternalTransactionSync( void ){
         }
 
     /* Send Control Byte */
-    if( 0U < (__i2c_txSize) ){
+    if( 0U < __i2c_txSize ){
         SSPBUF =  ( __i2c_address & I2C_SLAVE_ADDR_MASK ) | I2C_WRITE_TO_SLAVE;
         /* Send Bytes */
         while( 0U < __i2c_txSize ){
@@ -264,10 +276,9 @@ static void IIC_InternalTransactionSync( void ){
         while( 0U == PIR1bits.SSPIF );
         PIR1bits.SSPIF = 0u;
         if( !SSPSTATbits.P ){
-            /* Start bit not set */
+            /* Stop bit not set */
             IIC_internal_state = IIC_error;
             return;
         }
     IIC_internal_state = IIC_ready;
 }
-

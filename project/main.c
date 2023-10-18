@@ -64,18 +64,27 @@ void main(void) {
     iicTransaction.txBuffer = buffer;
     iicTransaction.txSize = 2U;
     IIC_TransactionSync( &iicTransaction );
+    Dio_WriteChannel( Dio_ch_1 , Dio_HIGH );
     while(1){
-        Dio_WriteChannel( Dio_ch_0 , !Dio_ReadChannel( Dio_ch_0 ) );
-
+        dev_id = 0x00;
+                /// READ ID from ADXL345 (expected 0xE5U)
+                buffer[0] = ADXL345_REG_DEV_ID;
+                    iicTransaction.txBuffer = buffer;
+                    iicTransaction.txSize = 1U;
+                    iicTransaction.rxBuffer = buffer;
+                    iicTransaction.rxSize = 1U;
+                Dio_WriteChannel( Dio_ch_1 , Dio_LOW );//Signal Cancel Transaction Test
+                IIC_TransactionAsync( &iicTransaction );
+                __delay_us( 100 );
+                IIC_CancelTransaction();
+                Dio_WriteChannel( Dio_ch_1 , Dio_HIGH );
         /// READ ID from ADXL345 (expected 0xE5U)
         buffer[0] = ADXL345_REG_DEV_ID;
             iicTransaction.txBuffer = buffer;
             iicTransaction.txSize = 1U;
             iicTransaction.rxBuffer = buffer;
             iicTransaction.rxSize = 1U;
-        dev_id = 0x00;
-        IIC_TransactionSync( &iicTransaction );
-        //IIC_TransactionAsync( &iicTransaction );
+        IIC_TransactionAsync( &iicTransaction );
         while( IIC_ready != IIC_getStatus() ){ }
 
         dev_id = buffer[0];
@@ -91,8 +100,7 @@ void main(void) {
             iicTransaction.txSize = 1U;
             iicTransaction.rxBuffer = buffer;
             iicTransaction.rxSize = BUFF_SIZE;
-        IIC_TransactionSync( &iicTransaction );
-        //IIC_TransactionAsync( &iicTransaction );
+        IIC_TransactionAsync( &iicTransaction );
         while( IIC_ready != IIC_getStatus() ){ }
         __delay_ms( 500 );/// Debounce time
     }
