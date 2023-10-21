@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "inc/Board/Dio/Dio.h"
-#include "inc/Board/IIC/IIC.h"
+#include "Dio.h"
+#include "IIC.h"
 
 #define ADXL345_SLAVE_ADDRESS           (0x53U << 1U)
 

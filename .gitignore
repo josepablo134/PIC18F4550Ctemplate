@@ -11,3 +11,4 @@ nbproject/Package-default.bash
 project/.vscode/settings.json
 **.log
 **.log.inx
+**/.vscode/**
