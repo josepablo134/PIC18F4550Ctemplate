@@ -9,15 +9,20 @@ void Pwm_Open(void){
  * Trying to configure the highes frequency for
  * the highest resolution possible:
  *  Datasheet (equation 15.1 and 15.3)
- * 
- * Assuming Timer2 clock is already configured by Board driver
  * */
     CCP1CON = 0x00;
     CCPR1L = 0x00;//Clear duty cycle
+
+    T2CON = 0x00;
+    T2CONbits.TOUTPS = 0;//Postcale = 1
+    T2CONbits.T2CKPS = 0;//Prescaler = 1
+
     PR2 = 0xFFU;
     PORTCbits.CCP1 = 0;
     TRISCbits.RC2 = 0;/// CCP1 (pwm channel 1)
     CCP1CONbits.CCP1M = 0x0C;
+    
+    T2CONbits.TMR2ON = 1;
 }
 
 void Pwm_SetDutyCycle( Pwm_Channel_t channel , Pwm_DutyCycle_t dutycycle ){

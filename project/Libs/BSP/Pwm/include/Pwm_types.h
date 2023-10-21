@@ -7,7 +7,7 @@
         Pwm_Ch_2
     }Pwm_Channel_t;
     
-	typedef uint16_t Pwm_DutyCycle_t;
+	typedef uint16_t Pwm_DutyCycle_t; // 10bits PWM
 
 #endif
 
