@@ -34,8 +34,7 @@ add_subdirectory( ${WORK_DIR}/Libs )
 add_subdirectory( ${WORK_DIR}/BoardConfig )
 
 target_link_libraries( ${EXEC_NAME}
-		BSP::Pwm
-		BSP::Adc
+		BSP::MicrochipUSBStack
 		BoardConfig
 )
 

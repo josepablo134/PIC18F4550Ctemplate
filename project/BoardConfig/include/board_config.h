@@ -83,6 +83,9 @@ extern "C" {
 
     #include <xc.h>
     #include <pic18f4550.h>
+    #include "fixed_address_memory.h"
+    #include "usb_config.h"
+    
     #define  clrwdt(){asm("CLRWDT");}
     #define  sleep(){asm("SLEEP");}
     #define  reset(){asm("RESET");}
