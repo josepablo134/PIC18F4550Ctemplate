@@ -20,6 +20,6 @@ target_link_libraries( ${COMPONENT_NAME}
 		BSP::SPI
 		BSP::Timer1
 		BSP::UART
-		BSP::MicrochipUSBStack
+		BSP::MicrochipUSBStack::latest
 )
 

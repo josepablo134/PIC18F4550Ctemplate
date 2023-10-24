@@ -1,8 +1,6 @@
 /*
  * File:   main.c
  * Author: josepablocb
- *
- * Created on December 14, 2021, 7:24 PM
  */
 #include <stdbool.h>
 #include <stdint.h>
@@ -18,10 +16,13 @@
 void AppLoop(void);
 void AppInit(void);
 
+#define MSG_STR_BUF_LEN     100
 #define USEC_PERIOD         500
 #define MSEC_PERIOD         500
 #define MSEC2USEC_PERIOD    ((uint32_t)(MSEC_PERIOD*1000U/USEC_PERIOD))
 uint32_t    rt_counter;
+uint16_t    counter=0;
+uint8_t     msg_str_buf[MSG_STR_BUF_LEN];
 
 void main(void) {
     rt_counter = 0;
@@ -61,7 +62,9 @@ void AppInit(void){
 void AppLoop(void){
     if(USBUSARTIsTxTrfReady())
     {
-        putrsUSBUSART("Hello World\n\r");
+        counter++;
+        snprintf( msg_str_buf, MSG_STR_BUF_LEN, "Hello World %d\n\r", counter );
+        putsUSBUSART( msg_str_buf );
     }
     LATAbits.LA4 = !PORTAbits.RA4;
 }

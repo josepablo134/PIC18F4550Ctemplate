@@ -34,7 +34,7 @@ add_subdirectory( ${WORK_DIR}/Libs )
 add_subdirectory( ${WORK_DIR}/BoardConfig )
 
 target_link_libraries( ${EXEC_NAME}
-		BSP::MicrochipUSBStack
+		BSP::MicrochipUSBStack::latest
 		BoardConfig
 )
 
@@ -45,4 +45,10 @@ target_include_directories(${EXEC_NAME} PRIVATE
 target_link_options(${EXEC_NAME}
 		PUBLIC
 		-Wl,-Map=${EXEC_NAME}.map
+)
+
+add_custom_target(flash
+                    DEPENDS ${EXEC_NAME}
+                    DEPENDS ${MPLABX_IPE_CLI}
+                    COMMAND ${MPLABX_JAVA} -jar ${MPLABX_IPE_CLI} -P${MCU_DEVICE} -T${PIC_PROGRAMMER_TOOL_SELECTION}${PIC_PROGRAMMER_IDENTIFICATION} -M -F\"${IPE_HEX_FILE}\" -OL
 )
