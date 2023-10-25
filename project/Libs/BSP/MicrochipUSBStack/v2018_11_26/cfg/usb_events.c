@@ -18,9 +18,10 @@ please contact mla_licensing@microchip.com
 *******************************************************************************/
 
 /** INCLUDES *******************************************************/
-#include "usb.h"
+#include "system.h"
+
 #include "usb_device.h"
-#include "usb_device_cdc.h"
+#include "usb_device_hid.h"
 
 /*******************************************************************
  * Function:        bool USER_USB_CALLBACK_EVENT_HANDLER(
@@ -54,34 +55,23 @@ bool USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, uint16_t size
             break;
 
         case EVENT_SUSPEND:
-            //Call the hardware platform specific handler for suspend events for
-            //possible further action (like optionally going reconfiguring the application
-            //for lower power states and going to sleep during the suspend event).  This
-            //would normally be done in USB compliant bus powered applications, although
-            //no further processing is needed for purely self powered applications that
-            //don't consume power from the host.
+            SYSTEM_Initialize(SYSTEM_STATE_USB_SUSPEND);
             break;
 
         case EVENT_RESUME:
-            //Call the hardware platform specific resume from suspend handler (ex: to
-            //restore I/O pins to higher power states if they were changed during the 
-            //preceding SYSTEM_Initialize(SYSTEM_STATE_USB_SUSPEND) call at the start
-            //of the suspend condition.
+            SYSTEM_Initialize(SYSTEM_STATE_USB_RESUME);
             break;
 
         case EVENT_CONFIGURED:
-            /* When the device is configured, we can (re)initialize the 
-             * demo code. */
-            CDCInitEP();
+            //enable the HID endpoint
+            USBEnableEndpoint(HID_EP,USB_IN_ENABLED|USB_HANDSHAKE_ENABLED|USB_DISALLOW_SETUP);
             break;
 
         case EVENT_SET_DESCRIPTOR:
             break;
 
         case EVENT_EP0_REQUEST:
-            /* We have received a non-standard USB request.  The CDC driver
-             * needs to check to see if the request was for it. */
-            USBCheckCDCRequest();
+            USBCheckHIDRequest();
             break;
 
         case EVENT_BUS_ERROR:

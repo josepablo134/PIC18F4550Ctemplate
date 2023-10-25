@@ -14,12 +14,7 @@ target_include_directories(${COMPONENT_NAME} PUBLIC
 )
 
 target_link_libraries( ${COMPONENT_NAME}
-		BSP::Adc
-		BSP::IIC
 		BSP::Mcu
-		BSP::SPI
-		BSP::Timer1
-		BSP::UART
 		BSP::MicrochipUSBStack::latest
 )
 

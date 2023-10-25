@@ -24,6 +24,9 @@ please contact mla_licensing@microchip.com
 #ifndef USBCFG_H
 #define USBCFG_H
 
+#include <stdint.h>
+#include "usb_ch9.h"
+
 /** DEFINITIONS ****************************************************/
 #define USB_EP0_BUFF_SIZE		8	// Valid Options: 8, 16, 32, or 64 bytes.
 								// Using larger options take more SRAM, but
@@ -32,29 +35,29 @@ please contact mla_licensing@microchip.com
 								// that use EP0 IN or OUT for sending large amounts of
 								// application related data.
 									
-#define USB_MAX_NUM_INT     	2   //Set this number to match the maximum interface number used in the descriptors for this firmware project
-#define USB_MAX_EP_NUMBER	    2   //Set this number to match the maximum endpoint number used in the descriptors for this firmware project
+#define USB_MAX_NUM_INT     	1   //Set this number to match the maximum interface number used in the descriptors for this firmware project
+#define USB_MAX_EP_NUMBER	    1   //Set this number to match the maximum endpoint number used in the descriptors for this firmware project
 
 //Device descriptor - if these two definitions are not defined then
-//  a const USB_DEVICE_DESCRIPTOR variable by the exact name of device_dsc
+//  a ROM USB_DEVICE_DESCRIPTOR variable by the exact name of device_dsc
 //  must exist.
 #define USB_USER_DEVICE_DESCRIPTOR &device_dsc
 #define USB_USER_DEVICE_DESCRIPTOR_INCLUDE extern const USB_DEVICE_DESCRIPTOR device_dsc
 
 //Configuration descriptors - if these two definitions do not exist then
-//  a const uint8_t *const variable named exactly USB_CD_Ptr[] must exist.
-#define USB_USER_CONFIG_DESCRIPTOR USB_CD_Ptr
-#define USB_USER_CONFIG_DESCRIPTOR_INCLUDE extern const uint8_t *const USB_CD_Ptr[]
+//  a ROM BYTE *ROM variable named exactly USB_CD_Ptr[] must exist.
+//#define USB_USER_CONFIG_DESCRIPTOR USB_CD_Ptr
+//#define USB_USER_CONFIG_DESCRIPTOR_INCLUDE extern ROM BYTE *ROM USB_CD_Ptr[]
 
 
 //------------------------------------------------------------------------------
-//Select an endpoint ping-pong bufferring mode.  Some microcontrollers only
+//Select an endpoint ping-pong buffering mode.  Some microcontrollers only
 //support certain modes.  For most applications, it is recommended to use either 
 //the USB_PING_PONG__FULL_PING_PONG or USB_PING_PONG__EP0_OUT_ONLY options.  
 //The other settings are supported on some devices, but they are not 
 //recommended, as they offer inferior control transfer timing performance.  
 //See inline code comments in usb_device.c for additional details.
-//Enabling ping pong bufferring on an endpoint generally increases firmware
+//Enabling ping pong buffering on an endpoint generally increases firmware
 //overhead somewhat, but when both buffers are used simultaneously in the 
 //firmware, can offer better sustained bandwidth, especially for OUT endpoints.
 //------------------------------------------------------
@@ -75,7 +78,7 @@ please contact mla_licensing@microchip.com
 //(ex: USBDeviceTasks()) must be called periodically by the application firmware
 //at a minimum rate as described in the inline code comments in usb_device.c.
 //------------------------------------------------------
-//#define USB_POLLING
+// #define USB_POLLING
 #define USB_INTERRUPT
 //------------------------------------------------------------------------------
 
@@ -92,16 +95,21 @@ please contact mla_licensing@microchip.com
 #define USB_SPEED_OPTION USB_FULL_SPEED
 //#define USB_SPEED_OPTION USB_LOW_SPEED //(this mode is only supported on some microcontrollers)
 
+#define MY_VID 0x04D8
+#define MY_PID 0x0000
+
+// #define USB_DEVICE_HID_IDLE_RATE_CALLBACK APP_DeviceMouseIdleRateCallback
+
 //------------------------------------------------------------------------------------------------------------------
 //Option to enable auto-arming of the status stage of control transfers, if no
 //"progress" has been made for the USB_STATUS_STAGE_TIMEOUT value.
 //If progress is made (any successful transactions completing on EP0 IN or OUT)
 //the timeout counter gets reset to the USB_STATUS_STAGE_TIMEOUT value.
 //
-//During normal control transfer processing, the USB stack or the application
+//During normal control transfer processing, the USB stack or the application 
 //firmware will call USBCtrlEPAllowStatusStage() as soon as the firmware is finished
-//processing the control transfer.  Therefore, the status stage completes as
-//quickly as is physically possible.  The USB_ENABLE_STATUS_STAGE_TIMEOUTS
+//processing the control transfer.  Therefore, the status stage completes as 
+//quickly as is physically possible.  The USB_ENABLE_STATUS_STAGE_TIMEOUTS 
 //feature, and the USB_STATUS_STAGE_TIMEOUT value are only relevant, when:
 //1.  The application uses the USBDeferStatusStage() API function, but never calls
 //      USBCtrlEPAllowStatusStage().  Or:
@@ -113,12 +121,12 @@ please contact mla_licensing@microchip.com
 //and it never uses host to device control transfers with data stage, then
 //it is not required to enable the USB_ENABLE_STATUS_STAGE_TIMEOUTS feature.
 
-#define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.
+#define USB_ENABLE_STATUS_STAGE_TIMEOUTS    //Comment this out to disable this feature.  
 
 //Section 9.2.6 of the USB 2.0 specifications indicate that:
-//1.  Control transfers with no data stage: Status stage must complete within
+//1.  Control transfers with no data stage: Status stage must complete within 
 //      50ms of the start of the control transfer.
-//2.  Control transfers with (IN) data stage: Status stage must complete within
+//2.  Control transfers with (IN) data stage: Status stage must complete within 
 //      50ms of sending the last IN data packet in fullfilment of the data stage.
 //3.  Control transfers with (OUT) data stage: No specific status stage timing
 //      requirement.  However, the total time of the entire control transfer (ex:
@@ -155,22 +163,18 @@ please contact mla_licensing@microchip.com
 //#define USB_DISABLE_TRANSFER_COMPLETE_HANDLER 
 
 /** DEVICE CLASS USAGE *********************************************/
-#define USB_USE_CDC
+#define USB_USE_HID
 
 /** ENDPOINTS ALLOCATION *******************************************/
 
-/* CDC */
-#define CDC_COMM_INTF_ID        0x0
-#define CDC_COMM_EP              1
-#define CDC_COMM_IN_EP_SIZE      10
+/* HID */
+#define HID_INTF_ID             0x00
+#define HID_EP 					1
+#define HID_INT_OUT_EP_SIZE     3
+#define HID_INT_IN_EP_SIZE      3
+#define HID_NUM_OF_DSC          1
+#define HID_RPT01_SIZE          50
 
-#define CDC_DATA_INTF_ID        0x01
-#define CDC_DATA_EP             2
-#define CDC_DATA_OUT_EP_SIZE    64
-#define CDC_DATA_IN_EP_SIZE     64
-
-//#define USB_CDC_SUPPORT_ABSTRACT_CONTROL_MANAGEMENT_CAPABILITIES_D2 //Send_Break command
-#define USB_CDC_SUPPORT_ABSTRACT_CONTROL_MANAGEMENT_CAPABILITIES_D1 //Set_Line_Coding, Set_Control_Line_State, Get_Line_Coding, and Serial_State commands
 /** DEFINITIONS ****************************************************/
 
 #endif //USBCFG_H

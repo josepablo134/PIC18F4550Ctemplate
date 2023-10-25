@@ -50,20 +50,6 @@ typedef enum
 ********************************************************************/
 extern void SYSTEM_Initialize( SYSTEM_STATE state );
 
-/*********************************************************************
-* Function: void SYSTEM_Tasks(void)
-*
-* Overview: Runs system level tasks that keep the system running
-*
-* PreCondition: System has been initalized with SYSTEM_Initialize()
-*
-* Input: None
-*
-* Output: None
-*
-********************************************************************/
-extern void SYSTEM_Tasks(void);
-
 /**
  * @brief SYSTEM_onStartEvent
  *          Executed whenever USB device switch to SYSTEM_STATE_USB_START
