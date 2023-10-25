@@ -35,7 +35,8 @@ add_subdirectory( ${WORK_DIR}/BoardConfig )
 
 target_link_libraries( ${EXEC_NAME}
 		BSP::MicrochipUSBStack::latest
-		BoardConfig
+		BoardConfig::Board
+		BoardConfig::USB
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE
