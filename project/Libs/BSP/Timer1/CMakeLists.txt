@@ -15,5 +15,7 @@ target_include_directories(${COMPONENT_NAME}_${SUB_COMPONENT_NAME} PUBLIC
 
 add_library(${COMPONENT_NAME}::${SUB_COMPONENT_NAME} ALIAS ${COMPONENT_NAME}_${SUB_COMPONENT_NAME})
 
-target_link_libraries( ${COMPONENT_NAME}_${SUB_COMPONENT_NAME} BoardConfig Utils )
-
+target_link_libraries( ${COMPONENT_NAME}_${SUB_COMPONENT_NAME} 
+		BoardConfig::Board
+		Utils
+)

@@ -12,5 +12,9 @@ target_include_directories(${COMPONENT_NAME} PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-target_link_libraries( ${COMPONENT_NAME} BoardConfig Utils BSP::Flash )
+target_link_libraries( ${COMPONENT_NAME} 
+		BoardConfig::Board
+		Utils
+		BSP::Flash
+)
 
