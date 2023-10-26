@@ -9,6 +9,11 @@
 
 #include "board_config.h"
 
+#include "Adc.h"
+#include "Dio.h"
+
+#include "utils.h"
+
 #include "usb.h"
 #include "usb_device.h"
 #include "usb_device_hid.h"
@@ -135,10 +140,11 @@ USB_HANDLE usbHandle;
 
 void AppLoop(void);
 void AppInit(void);
+void AppButtonDebuncer( void );
 
 #define USEC_PERIOD         (500UL)
 #define MSEC_PERIOD         (10UL)
-#define MSEC2USEC_PERIOD    ((uint32_t)(MSEC_PERIOD*1000UL/USEC_PERIOD))
+#define MSEC2USEC_PERIOD(MS_PERIOD)    ((uint32_t)(MS_PERIOD*1000UL/USEC_PERIOD))
 uint32_t    rt_counter;
 
 void main(void) {
@@ -153,10 +159,11 @@ void main(void) {
     while(1)
     {
         rt_counter++;
-        if( rt_counter >= MSEC2USEC_PERIOD ){
+        if( rt_counter >= MSEC2USEC_PERIOD( MSEC_PERIOD ) ){
             rt_counter=0;
             AppLoop();
         }
+        AppButtonDebuncer();
         __delay_us( USEC_PERIOD );
     }
 }
@@ -172,75 +179,71 @@ void AppInit(void){
     TRISAbits.RA4 = 0U;
     LATAbits.LA2 = 0U;
     LATAbits.LA3 = 0U;
-    LATAbits.LA4 = 1U;
+    LATAbits.LA4 = 0U;
+
+    Dio_Init();
+    Dio_Open();
+    Adc_Init();
+    Adc_Open();
 
     usbHandle = NULL;
     mouseReport.buttons.value = 0U;
     mouseReport.x = mouseReport.y = 0U;
 }
 
-typedef enum mouse_state_t{
-    MOUSE_UP=0,
-    MOUSE_RIGHT,
-    MOUSE_DOWN,
-    MOUSE_LEFT,
-}mouse_state_t;
-
-mouse_state_t mouseState=MOUSE_UP;
-#define MOUSE_MOVE_COUNT_MAX    (400U)
-uint16_t mouse_move_count=MOUSE_MOVE_COUNT_MAX;
-
+DioLevel_t debouncedButtonLevel = Dio_LOW;
 void AppLoop(void){
+#define     AD_x1           ((int32_t)0L)
+#define     AD_x2           ((int32_t)1023L)
+#define     AD_y1           ((int32_t)-10L)
+#define     AD_y2           ((int32_t)10L)
+    AdcCounts_t adX,adY;
+    uint8_t x=0,y=0;
     /**
      * We can only send a report if the last report has been sent.
      */
     if(HIDTxHandleBusy( usbHandle ) == false)
     {
-        mouse_move_count++;
-        if( mouse_move_count >= MOUSE_MOVE_COUNT_MAX ){
-            mouse_move_count = 0;
-        }
-        switch ( mouseState )
-        {
-            case MOUSE_UP:{
-                mouseReport.x = 0;
-                mouseReport.y = (uint8_t) -1;
-                if( !mouse_move_count ){mouseState = MOUSE_RIGHT;}
-            }
-                break;
-            case MOUSE_RIGHT:{
-                mouseReport.x = 1;
-                mouseReport.y = 0;
-                if( !mouse_move_count ){mouseState = MOUSE_DOWN;}
-            }
-                break;
-            case MOUSE_DOWN:{
-                mouseReport.x = 0;
-                mouseReport.y = 1;
-                if( !mouse_move_count ){mouseState = MOUSE_LEFT;}
-            }
-                break;
-            case MOUSE_LEFT:{
-                mouseReport.x = (uint8_t) -1;
-                mouseReport.y = 0;
-                if( !mouse_move_count ){mouseState = MOUSE_UP;}
-            }
-                break;
-            default:{
-                mouseState = MOUSE_UP;
-                mouse_move_count = 0;
-            }
-            break;
-        }
+        Adc_ConvertSync( 0 );
+        adX = Adc_getCounts() + 50;//AD compensation
+        Adc_ConvertSync( 1 );
+        adY = Adc_getCounts();
+        
+        x = (uint8_t) map( (int32_t)adX, AD_x1, AD_x2, AD_y1, AD_y2);
+        y = (uint8_t) map( (int32_t)adY, AD_x2, AD_x1, AD_y1, AD_y2);
+
+        mouseReport.x = (uint8_t) x;
+        mouseReport.y = (uint8_t) y;
+        mouseReport.buttons.primary = (uint8_t) !debouncedButtonLevel;
+
         usbHandle = HIDTxPacket(
                         HID_EP,
                         (uint8_t*)&mouseReport,
                         sizeof(mouseReport)
                     );
     }
-    LATAbits.LA4 = !PORTAbits.RA4;
+    LATAbits.LA4 = !debouncedButtonLevel;
 }
 
+void AppButtonDebuncer( void ){
+    #define DEBOUNCE_PERIOD MSEC2USEC_PERIOD( 50U )
+    static uint32_t rt_button_debounce_counter = DEBOUNCE_PERIOD;
+    static bool debounce_on_going = true;
+
+    if( false == debounce_on_going ){
+        /// If button state changes, then begin debounce
+        if( Dio_ReadChannel( Dio_ch_0 ) != debouncedButtonLevel ){
+            rt_button_debounce_counter = DEBOUNCE_PERIOD;
+            debounce_on_going = true;
+        }
+    }else{
+        rt_button_debounce_counter--;
+        if( rt_button_debounce_counter == 0 ){
+            debouncedButtonLevel = Dio_ReadChannel( Dio_ch_0 );
+            debounce_on_going = false;
+        }
+    }
+}
 
 void USB_DEVICE_HID_IDLE_RATE_CALLBACK(uint8_t reportId, uint8_t idleRate){
     

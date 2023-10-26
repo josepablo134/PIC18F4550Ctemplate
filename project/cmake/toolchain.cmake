@@ -25,8 +25,8 @@ set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
 set(OBJECT_GEN_FLAGS "-mcpu=18F4550 -c -fno-short-double -fno-short-float -memi=wordwrite -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=0 -Wa,-a -DXPRJ_default=default -D__18F4550 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto")
 set(LINK_FLAGS "-mcpu=18F4550 -DXPRJ_default=default -Wl,--defsym=__MPLAB_BUILD=1 -fno-short-double -fno-short-float -memi=wordwrite -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=0 -Wa,-a -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -mrom=default,-7dc0-7fff -mram=default,-3f4-3ff,-f9c-f9c,-fd4-fd4,-fdb-fdf,-fe3-fe7,-feb-fef,-ffd-fff")
 
-set(CMAKE_C_FLAGS "${OBJECT_GEN_FLAGS} -Os" CACHE INTERNAL "C Compiler options")
-set(CMAKE_EXE_LINKER_FLAGS "${LINK_FLAGS} -Os" CACHE INTERNAL "Linker options")
+set(CMAKE_C_FLAGS "${OBJECT_GEN_FLAGS} -O2" CACHE INTERNAL "C Compiler options")
+set(CMAKE_EXE_LINKER_FLAGS "${LINK_FLAGS} -O2" CACHE INTERNAL "Linker options")
 
 #---------------------------------------------------------------------------------------
 # Set debug/release build configuration Options
@@ -37,7 +37,7 @@ set(CMAKE_C_FLAGS_DEBUG "-Og -g -D__DEBUG=1" CACHE INTERNAL "C Compiler options 
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${LINK_FLAGS} -O0 -D__DEBUG=1" CACHE INTERNAL "Linker options for debug build type")
 
 # Options for RELEASE build
-set(CMAKE_C_FLAGS_RELEASE "-Os" CACHE INTERNAL "C Compiler options for release build type")
+set(CMAKE_C_FLAGS_RELEASE "-O2" CACHE INTERNAL "C Compiler options for release build type")
 set(CMAKE_ASM_FLAGS_RELEASE "" CACHE INTERNAL "ASM Compiler options for release build type")
 
 

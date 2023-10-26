@@ -7,8 +7,9 @@ void Dio_Init( void ){
 }
 
 void Dio_Open( void ){
-    PORTD = 0x00;
-    TRISD = 0x00;
+    PORTEbits.RDPU = 1;//Enable PORT-D pull-ups
+    TRISD = DIO_INITIAL_CFG;
+    PORTD = DIO_INITIAL_PULLUP_CFG;
     LATD = DIO_INITIAL_OUTPUT;
 }
 
