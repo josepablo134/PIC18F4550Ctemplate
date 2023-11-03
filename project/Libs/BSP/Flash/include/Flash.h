@@ -9,8 +9,8 @@ extern "C" {
      * EXTERNAL RESOURCES
      */
 
-    #include "flash_cfg.h"
-    #include "flash_types.h"
+    #include "Flash_cfg.h"
+    #include "Flash_types.h"
 
     /**
      * 

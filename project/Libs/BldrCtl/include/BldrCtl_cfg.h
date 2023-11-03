@@ -1,8 +1,8 @@
 #ifndef _BLDR_CTL_CFG_H_
 #define	_BLDR_CTL_CFG_H_
 
-    #include "flash_cfg.h"
-    #include "bldrCtl_types.h"
+    #include "Flash_cfg.h"
+    #include "BldrCtl_types.h"
 
     #define BLDR_CFG_LOCAL_BUFFER_SIZE      FLASH_CFG_SECTOR_SIZE
     #define BLDR_CFG_APPL_START             (0x800U)

@@ -1,6 +1,6 @@
 #include "project_macros.h"
 #include "board_config.h"
-#include "flash.h"
+#include "Flash.h"
 
 FlashStdReturn_t FlashErase( FlashAddress_t addr , FlashSize_t length ){
     uint16_t  count;

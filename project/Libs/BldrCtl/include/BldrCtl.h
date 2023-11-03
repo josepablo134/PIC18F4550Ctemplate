@@ -5,8 +5,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
-    #include "bldrCtl_cfg.h"
-    #include "bldrCtl_types.h"
+    #include "BldrCtl_cfg.h"
+    #include "BldrCtl_types.h"
     
     extern void BLDR_Init(void);
     

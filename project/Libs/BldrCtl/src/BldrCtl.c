@@ -1,5 +1,5 @@
 #include "board_config.h"
-#include "bldrCtl.h"
+#include "BldrCtl.h"
 #include "project_macros.h"
 
 static BldrState_t __state = BLDR_UNINIT;

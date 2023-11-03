@@ -8,8 +8,17 @@ set(CMAKE_SYSTEM_NAME "generic")
 set(CMAKE_SYSTEM_PROCESSOR "PIC18")
 
 set(TOOLCHAIN xc8)
-set(TOOLCHAIN_VERSION v2.41)
-set(TOOLCHAIN_PREFIX "C:/Program\ Files/Microchip/${TOOLCHAIN}/${TOOLCHAIN_VERSION}")
+
+if(WIN32)
+	set(TOOLCHAIN_VERSION v2.41)
+	set(TOOLCHAIN_PREFIX "C:/Program Files/Microchip/${TOOLCHAIN}/${TOOLCHAIN_VERSION}")
+	set(TOOLCHAIN_EXEC_SUFFIX ".exe")
+elseif( UNIX )
+	set(TOOLCHAIN_VERSION v2.45)
+	set(TOOLCHAIN_PREFIX "/opt/microchip/${TOOLCHAIN}/${TOOLCHAIN_VERSION}")
+	set(TOOLCHAIN_EXEC_SUFFIX "")
+endif()
+
 set(TOOLCHAIN_BIN_DIR ${TOOLCHAIN_PREFIX}/bin)
 
 # Perform compiler test with static library
@@ -44,8 +53,8 @@ set(CMAKE_ASM_FLAGS_RELEASE "" CACHE INTERNAL "ASM Compiler options for release 
 #---------------------------------------------------------------------------------------
 # Set compilers
 #---------------------------------------------------------------------------------------
-set(CMAKE_C_COMPILER ${TOOLCHAIN_BIN_DIR}/${TOOLCHAIN}-cc.exe   CACHE INTERNAL "C Compiler")
-set(CMAKE_AR ${TOOLCHAIN_BIN_DIR}/${TOOLCHAIN}-ar.exe   CACHE INTERNAL "Archiver")
+set(CMAKE_C_COMPILER ${TOOLCHAIN_BIN_DIR}/${TOOLCHAIN}-cc${TOOLCHAIN_EXEC_SUFFIX}   CACHE INTERNAL "C Compiler")
+set(CMAKE_AR ${TOOLCHAIN_BIN_DIR}/${TOOLCHAIN}-ar${TOOLCHAIN_EXEC_SUFFIX}   CACHE INTERNAL "Archiver")
 
 set(CMAKE_FIND_ROOT_PATH)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)
