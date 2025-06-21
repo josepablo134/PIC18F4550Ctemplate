@@ -10,7 +10,7 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_EXECUTABLE_SUFFIX .elf)
 
 # Referenced from: https://github.com/AymenLA/LedBlinker.X
-set( MPLABX_BASE_PATH "C:/Program Files/Microchip/MPLABX/v6.10/" CACHE STRING "MPLAB X")
+set( MPLABX_BASE_PATH "C:/Program Files/Microchip/MPLABX/v6.20/" CACHE STRING "MPLAB X")
 set( MPLABX_JAVA "${MPLABX_BASE_PATH}/sys/java/zulu8.64.0.19-ca-fx-jre8.0.345-win_x64/bin/java" CACHE STRING "MPLAB X Java")
 set( MPLABX_IPE_CLI "${MPLABX_BASE_PATH}/mplab_platform/mplab_ipe/ipecmd.jar" CACHE STRING "MPLAB X IPE")
 

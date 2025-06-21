@@ -18,7 +18,7 @@ project( PIC18F4550CTemplate
 # Project Set-Up
 # ===================================================================
 
-set( PROJECT_NAME template )
+set( PROJECT_NAME pic18f4550 )
 set( EXEC_NAME ${PROJECT_NAME} )
 set( WORK_DIR ${PROJECT_SOURCE_DIR} )
 
@@ -34,9 +34,8 @@ add_subdirectory( ${WORK_DIR}/Libs )
 add_subdirectory( ${WORK_DIR}/BoardConfig )
 
 target_link_libraries( ${EXEC_NAME}
-		BSP::MicrochipUSBStack::latest
+		BSP::UART
 		BoardConfig::Board
-		BoardConfig::USB
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE

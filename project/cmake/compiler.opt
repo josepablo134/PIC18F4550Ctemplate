@@ -2,7 +2,7 @@
 -c
 -D__DEBUG=1
 -mdebugger=pickit3
--mdfp="C:/Program Files/Microchip/MPLABX/v6.10/packs/Microchip/PIC18Fxxxx_DFP/1.4.151/xc8"
+-mdfp="C:/Program Files/Microchip/xc8/v3.00/pic/dat/ini"
 -fno-short-double
 -fno-short-float
 -memi=wordwrite
