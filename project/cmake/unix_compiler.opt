@@ -1,0 +1,23 @@
+-mcpu=18F4550
+-c
+-D__DEBUG=1
+-mdebugger=pickit3
+-mdfp="/opt/microchip/xc8/v3.00/pic/dat/ini"
+-fno-short-double
+-fno-short-float
+-memi=wordwrite
+-O0
+-fasmfile
+-maddrqual=ignore
+-xassembler-with-cpp
+-mwarn=0
+-Wa,-a
+-DXPRJ_default=default
+-msummary=-psect,-class,+mem,-hex,-file
+-ginhx32 -Wl,--data-init
+-mno-keep-startup
+-mno-download
+-mdefault-config-bits
+-std=c99
+-gdwarf-3
+-mstack=compiled:auto:auto:auto
