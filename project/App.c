@@ -1,18 +1,12 @@
 #include "App.h"
-#include "ComM.h"
-#include "Timer0.h"
 
 #define APP_RST_VECT        0x000800
 #define APP_HISR            0x000808
 #define APP_LISR            0x000818
 
-uint8_t com_buffer[ COMM_CFG_PAYLOAD_DATA_LEN ];
-ComM_Payload_t frame = {
-    .data = com_buffer
-};
-
 void App_Init( void ){
     Board_Init();
+    Scheduler_Init();
     ComM_Init();
     ComM_Open();
 }
@@ -39,13 +33,10 @@ App_state_t App_mainFunction( App_state_t state ){
 }
 
 App_state_t App_State_Init( App_state_t state ){
-    uint32_t counter = _XTAL_FREQ / (1000U / 10U); /// Wait 10ms in form of clock ticks
-
-    com_buffer[0U] = 0x00U;
-
     LATAbits.LA4 = 1U;
 
-    if( COMM_OK == ComM_WaitAck( counter ) ){
+    if( COMM_OK == ComM_WaitAck( APP_CFG_INIT_WAIT_TIME ) ){
+        ComM_SendAck();
         state = APP_STATE_APP_REPROGRAMMING;
     }else{
         state = APP_STATE_APP_CHECK;
@@ -61,13 +52,10 @@ App_state_t App_State_AppCheck( App_state_t state ){
 }
 
 App_state_t App_State_AppReprogramming( App_state_t state ){
-    UART_SetPollingReceive( com_buffer, 1U );
+    uint8_t byte;
     while( 1 ){
-        if( ! ( UART_PollReceive( 1U ) & RX_BUSY ) ){ /// Reception completed
-            LATAbits.LA4 = !PORTAbits.RA4;
-            UART_TransmitSync( com_buffer, 1U );
-            UART_SetPollingReceive( com_buffer, 1U );
-        }
+        LATAbits.LA4 = !PORTAbits.RA4;
+        __delay_ms( 100U );
     }
     return state;
 }

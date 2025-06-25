@@ -3,5 +3,4 @@
 # @author Josepablo C (josepablo134@gmail.com)
 ################################################################################
 
-add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/Com )
-add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/SysS )
+add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/ComM )

@@ -18,7 +18,6 @@
     #define UART_ERROR          0xFF
 
     typedef uint8_t             uart_status_t;
-    typedef uint8_t             uart_timeout_t;
     typedef uint8_t             uart_byte;
 	typedef uint16_t            uart_buffer_size_t;
     typedef uint32_t            uart_baudrate;

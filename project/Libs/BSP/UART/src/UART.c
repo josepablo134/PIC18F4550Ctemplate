@@ -159,14 +159,8 @@ uart_status_t UART_SetPollingReceive(uart_byte* buffer, uart_buffer_size_t size)
     return status;
 }
 
-uart_status_t UART_PollReceive(uart_timeout_t counts){
-    while( counts-- ){
-        UART_RX_ISR();/// Execute the same logic as the ISR
-        if( !(status & RX_BUSY) ){
-            /// Finish polling if status is complete
-            break;
-        }
-    }
+uart_status_t UART_PollReceive(void){
+    UART_RX_ISR();/// Execute the same logic as the ISR
     return status;
 }
 

@@ -9,6 +9,8 @@
 
     #define COMM_CFG_TIMEOUT_MS                         (1U)
 
-    #define COMM_CFG_CRC8_INIT_VAL                      (0xCE)
+    #define COMM_CFG_CRC8_INIT_VAL                      (0xCEU)
+
+    #define COMM_CFG_MAX_NUM_OF_EVENTS                  (0x04U)
 
 #endif

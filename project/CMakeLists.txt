@@ -41,8 +41,8 @@ target_link_libraries( ${EXEC_NAME}
 		BSP::UART
 		BSP::Timer1
 		BoardConfig::Board
-		App::ComM
-		App::SysS::Scheduler
+		Com::ComM
+		SysS::Scheduler
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE

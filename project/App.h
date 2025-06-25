@@ -1,6 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
+    /** Wait time in ms. This is the time the BL waits for an ACK signal to start the reprogramming session. */
+    #define APP_CFG_INIT_WAIT_TIME              (50U)
+
+    #include "ComM.h"
+
     typedef enum App_state_t{
         APP_STATE_INIT,
         APP_STATE_APP_CHECK,

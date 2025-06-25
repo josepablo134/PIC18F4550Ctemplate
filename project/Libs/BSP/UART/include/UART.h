@@ -60,7 +60,7 @@ extern "C" {
     /**
      * @brief Check if receive request is completed by copying all bytes left from the UART buffer within the specified number of iterations.
      * */
-    extern uart_status_t UART_PollReceive(uart_timeout_t);
+    extern uart_status_t UART_PollReceive(void);
 
     /**
      * @brief Cancel an ongoing reception

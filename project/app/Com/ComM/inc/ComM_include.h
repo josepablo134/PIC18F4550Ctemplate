@@ -5,5 +5,6 @@
     #include "board_config.h"
     #include "project_macros.h"
     #include "UART.h"
+    #include "Scheduler.h"
 
 #endif

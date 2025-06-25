@@ -2,7 +2,7 @@
 # @file CMakeLists.txt
 # @author Josepablo C (josepablo134@gmail.com)
 ################################################################################
-set(COMPONENT_NAME App)
+set(COMPONENT_NAME Com)
 set(SUB_COMPONENT_NAME ComM)
 
 add_library(${COMPONENT_NAME}_${SUB_COMPONENT_NAME} STATIC
@@ -19,4 +19,5 @@ target_link_libraries( ${COMPONENT_NAME}_${SUB_COMPONENT_NAME}
 		BoardConfig::Board
 		Utils
 		BSP::UART
+		SysS::Scheduler
 )
