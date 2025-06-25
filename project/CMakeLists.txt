@@ -28,14 +28,21 @@ include( cmake/project.cmake)
 # Project content
 # ===================================================================
 
-add_executable( ${EXEC_NAME} ${WORK_DIR}/main.c )
+add_executable( ${EXEC_NAME}
+	${WORK_DIR}/main.c
+	${WORK_DIR}/App.c
+)
 
 add_subdirectory( ${WORK_DIR}/Libs )
 add_subdirectory( ${WORK_DIR}/BoardConfig )
+add_subdirectory( ${WORK_DIR}/App )
 
 target_link_libraries( ${EXEC_NAME}
 		BSP::UART
+		BSP::Timer1
 		BoardConfig::Board
+		App::ComM
+		App::SysS::Scheduler
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE

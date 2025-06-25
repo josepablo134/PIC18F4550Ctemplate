@@ -1,22 +1,24 @@
 #include "board_config.h"
 #include "Mcu.h"
-#include "UART.h"
-#include "UART_internal.h"
 
 void __interrupt(high_priority) Board_HP_ISR(void){
+    /** Pass control to App HISR */
+    asm("GOTO 0x000808");
 }
 
 void __interrupt(low_priority) Board_LP_ISR(void){
-    UART_ISR();
+    /** Pass control to App LISR */
+    asm("GOTO 0x000818");
 }
 
 void Board_Init(){
     Mcu_Init();
     Mcu_Open();
-    /** enable int priority + enable both priority interrupts */
+    /** enable int priority */
     RCONbits.IPEN = 1U;
-    INTCONbits.GIEH = 1U;
-    INTCONbits.GIEL = 1U;
+    /** disable all interrupts */
+    INTCONbits.GIEH = 0U;
+    INTCONbits.GIEL = 0U;
 
     /** Make PortA full DIO */
     TRISA = 0x00;

@@ -4,7 +4,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif /* __cplusplus */
-    #define _XTAL_FREQ  48000000
+    #define _XTAL_FREQ      (48000000U)
 
     // PIC18F4550 Configuration Bit Settings
 

@@ -9,7 +9,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_EXECUTABLE_SUFFIX .elf)
 
-if(WIN32)
+if (CMAKE_HOST_WIN32)
     # Referenced from: https://github.com/AymenLA/LedBlinker.X
 	message("Configuring for win")
     set( MPLABX_BASE_PATH "C:/Program Files/Microchip/MPLABX/v6.20/" CACHE STRING "MPLAB X")

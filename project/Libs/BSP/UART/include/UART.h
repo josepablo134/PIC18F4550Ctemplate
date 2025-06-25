@@ -10,6 +10,8 @@
 
     #include "UART_include.h"
 	#include "UART_types.h"
+    #include "UART_internal.h"
+    #include "UART_cfg.h"
 
 #ifdef	__cplusplus
 extern "C" {
@@ -49,7 +51,17 @@ extern "C" {
      * @brief Receive bytes and halt until operation finishes
      * */
     extern uart_status_t UART_ReceiveSync(uart_byte* , uart_buffer_size_t);
-    
+
+    /**
+     * @brief Set a receive request to the state machine but do not use the interrupts
+     * */
+    extern uart_status_t UART_SetPollingReceive(uart_byte* , uart_buffer_size_t);
+
+    /**
+     * @brief Check if receive request is completed by copying all bytes left from the UART buffer within the specified number of iterations.
+     * */
+    extern uart_status_t UART_PollReceive(uart_timeout_t);
+
     /**
      * @brief Cancel an ongoing reception
      * */

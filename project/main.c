@@ -1,25 +1,45 @@
-#include "stdio.h"
-#include "UART.h"
+#include "App.h"
+#include "Scheduler.h"
 
-char msg[] = "Hello world!! [256]   \n";
+void Task0(void){
+    asm("BTG    LATA,4");
+}
 
+void Task1(void){
+    asm("BTG    LATA,0");
+}
+
+#define NUM_OF_TASKS    (2U)
+minitask_t task_list[NUM_OF_TASKS] = {
+    {
+        .body = Task0,
+        .period = 2U,
+        .offset = 0U,
+    },
+    {
+        .body = Task1,
+        .period = 2U,
+        .offset = 1U
+    }
+};
+
+/// @brief Software shall not consume more than 6.25% of ROM ( 2048KB! )
+/// @param  
 void main(void) {
-    Board_Init();
-    UART_Init();
-    UART_Open( 115200U );
+    App_state_t app_state;
+    app_state = APP_STATE_INIT;
 
-    uint8_t counter = 0U;
+    App_Init();
+    Scheduler_Init();
+    Scheduler_SetTaskList( task_list, NUM_OF_TASKS );
+    Scheduler_Start();
 
-    while(1){
-        snprintf( msg, sizeof(msg), "Hello world!! [%u]\n", counter );
+    while( 1 ){
+        app_state = App_mainFunction( app_state );
 
-        while( UART_Status() ){}
-        UART_TransmitAsync( 
-            (const uart_byte*) msg,
-            sizeof( msg ) );
-
-            counter ++;
-        LATAbits.LA4 = !PORTAbits.RA4;
-        __delay_ms( 100 );
+        Scheduler_SetTimeout( 5U );
+        Scheduler_StartTimer();
+        while( Scheduler_TimeoutReached() == SCHEDULER_TIMEOUT_NOT_REACHED ){}
+        asm("BTG    LATA,4");// Toggle LAT4
     }
 }
