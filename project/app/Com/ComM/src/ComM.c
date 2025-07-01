@@ -15,7 +15,6 @@ static ComM_EventHandler_t event_list[ COMM_CFG_MAX_NUM_OF_EVENTS ];
 
 static ComM_LockStatus_t comm_status = COMM_UNLOCKED;
 
-
 /**
  * PRIVATE FUNCTIONS
  */
@@ -61,13 +60,12 @@ ComM_LockStatus_t ComM_getLockStatus(void){
     return comm_status;
 }
 
-ComM_Status_t ComM_Send(const ComM_Frame_t* payload){
+ComM_Status_t ComM_Send( const ComM_Frame_t* payload , ComM_FrameConfirmation_t confirmation ){
     uint8_t frame_len = 0U;
     uint8_t crc_val = COMM_CFG_CRC8_INIT_VAL;
-    ComM_Status_t retVal = COMM_NOT_OK;
 
     if( ( comm_status == COMM_LOCKED ) || ( payload == NULL ) || ( payload->data == NULL ) || ( payload->ID.len > COMM_CFG_PAYLOAD_DATA_LEN ) || ( UART_Status() & TX_BUSY ) ){
-        return retVal;
+        return COMM_NOT_OK;
     }
 
     _comm_buffer[0U] = COMM_FRAME_TYPE_DATA; /** Data Frame Type */
@@ -86,9 +84,11 @@ ComM_Status_t ComM_Send(const ComM_Frame_t* payload){
     /// Send Frame header (1byte) + ID (1byte) + payload + CRC8 (1byte)
     UART_TransmitSync( _comm_buffer, frame_len + 3U );
 
-    retVal = COMM_OK;
-
-    return retVal;
+    if( COMM_FRAME_CONFIRM_TRUE == confirmation ){
+        return ComM_WaitAck( COMM_CFG_TIMEOUT_MS );
+    }else{
+        return COMM_OK;
+    }
 }
 
 ComM_Status_t ComM_SendAck(void){
@@ -193,7 +193,9 @@ ComM_Status_t ComM_SetEventHandler( ComM_Event_id_t id, ComM_EventHandler_t call
 static inline void ComM_invokeService( ComM_Frame_t *frame ){
     ComM_Event_id_t id = frame->ID.id;
 
-    if( id > COMM_CFG_MAX_NUM_OF_EVENTS ){
+    if( (id > COMM_CFG_MAX_NUM_OF_EVENTS) || (event_list[id] == 0x00U) ){
+        /// Not a valid service
+        ComM_SendNack();
         return;
     }
 
@@ -205,10 +207,7 @@ void ComM_mainFunction( void ){
     ComM_Frame_t frame;
     uint8_t *buff_ptr;
     uint8_t counter;
-    uint8_t crc_val = COMM_CFG_CRC8_INIT_VAL;
-
-    frame.data = _comm_buffer;
-    buff_ptr = _comm_buffer;
+    uint8_t crc_val;
 
     for(;;){
         switch ( ComM_receiveByte() )
@@ -224,6 +223,7 @@ void ComM_mainFunction( void ){
                     }
 
                     /** Receive every data byte and calculate the CRC on the go */
+                    crc_val = COMM_CFG_CRC8_INIT_VAL;
                     buff_ptr = _comm_buffer;
                     for( counter=0U; counter < frame.ID.len; counter ++ ){
                         *buff_ptr = ComM_receiveByte();
@@ -236,6 +236,7 @@ void ComM_mainFunction( void ){
                      * */
                     *buff_ptr = ComM_receiveByte();// Get the CRC byte
                     if( *buff_ptr == crc_val ){
+                        frame.data = _comm_buffer;
                         ComM_invokeService( &frame );
                     }else{
                         /// Reject received frame
@@ -244,7 +245,11 @@ void ComM_mainFunction( void ){
                 }
                 break;
             case COMM_FRAME_TYPE_NACK:
+                ComM_SendNack();
+                break;
             case COMM_FRAME_TYPE_ACK:
+                ComM_SendAck();
+                break;
             default:
                 break;
         }

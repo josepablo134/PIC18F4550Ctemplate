@@ -15,7 +15,7 @@ FlashStdReturn_t FlashErase( FlashAddress_t addr , FlashSize_t length ){
     }
 
     addr = addr + FLASH_CFG_VIRTUAL_BASE_ADDR;
-    
+
 	/// Divide by SECTOR SIZE
     count = (FlashSize_t)(length >> \
 		FLASH_CFG_VIRTUAL_SECTOR_DIV_LSFT_BITS
@@ -36,7 +36,7 @@ FlashStdReturn_t FlashErase( FlashAddress_t addr , FlashSize_t length ){
         }
         //Enable interrupts again
         addr += FLASH_CFG_SECTOR_SIZE;
-    }    
+    }
     return FLS_OK;
 }
 

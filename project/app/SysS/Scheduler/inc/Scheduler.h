@@ -27,7 +27,7 @@ extern "C" {
     /** Provide the list of tasks */
     extern void Scheduler_SetTaskList( minitask_t* , uint8_t );
 
-    extern systick_t Scheeduler_GetSysTick(void);
+    extern systick_t Scheduler_GetSysTick(void);
 
     /** Start scheduler */
     extern void Scheduler_Start(void);

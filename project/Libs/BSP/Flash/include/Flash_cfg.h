@@ -37,8 +37,8 @@
 
     #define FLASH_CFG_TOTAL_SIZE                			(32768U)
 
-    #define FLASH_CFG_VIRTUAL_SIZE              			(1024U)
+    #define FLASH_CFG_VIRTUAL_SIZE              			(24576U)
 
-    #define FLASH_CFG_VIRTUAL_BASE_ADDR         			(0x7C00U)
+    #define FLASH_CFG_VIRTUAL_BASE_ADDR         			(0x02000U)
 
 #endif

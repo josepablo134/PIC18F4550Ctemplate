@@ -19,8 +19,8 @@ extern "C" {
 
     extern ComM_LockStatus_t ComM_getLockStatus(void);
 
-    /** Send a data package immediately */
-    extern ComM_Status_t ComM_Send( const ComM_Frame_t* payload );
+    /** Send a data package immediately and wait for confirmation ACK */
+    extern ComM_Status_t ComM_Send( const ComM_Frame_t* payload , ComM_FrameConfirmation_t confirmation );
 
     /** Send an ACK package immediately */
     extern ComM_Status_t ComM_SendAck(void);

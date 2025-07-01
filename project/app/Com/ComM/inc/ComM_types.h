@@ -28,6 +28,11 @@
         COMM_LOCKED=1U
     }ComM_LockStatus_t;
 
+    typedef enum ComM_FrameConfirmation_t{
+        COMM_FRAME_CONFIRM_FALSE=0U,
+        COMM_FRAME_CONFIRM_TRUE
+    }ComM_FrameConfirmation_t;
+
     typedef uint8_t ComM_Event_id_t;
     
     typedef void (*ComM_EventHandler_t)(ComM_Frame_t *);

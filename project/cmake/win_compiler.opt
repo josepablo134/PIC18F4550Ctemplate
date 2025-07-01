@@ -6,7 +6,7 @@
 -fno-short-double
 -fno-short-float
 -memi=wordwrite
--O0
+-O2
 -fasmfile
 -maddrqual=ignore
 -xassembler-with-cpp

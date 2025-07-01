@@ -59,7 +59,7 @@ void Scheduler_Start(void){
     Scheduler_SetTimeout( SCHEDULER_SYSTICK_PERIOD );
     Scheduler_StartTimer();
     scheduler_state = SCHEDULER_STATE_RUNNING;
-    while( scheduler_state == SCHEDULER_STATE_RUNNING ){            
+    while( scheduler_state == SCHEDULER_STATE_RUNNING ){
         /**
          * Execute any READY task:
          * Instead of wasting time waiting for the timeout to be reached, use this time to execute the ready tasks.
@@ -99,6 +99,6 @@ void Scheduler_Stop(void){
     scheduler_state = SCHEDULER_STATE_EXIT;
 }
 
-systick_t Scheeduler_GetSysTick(void){
+systick_t Scheduler_GetSysTick(void){
     return system_tick;
 }

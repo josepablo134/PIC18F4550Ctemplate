@@ -39,10 +39,12 @@ add_subdirectory( ${WORK_DIR}/App )
 
 target_link_libraries( ${EXEC_NAME}
 		BSP::UART
-		BSP::Timer1
+		BSP::Timer0
+		BSP::Flash
 		BoardConfig::Board
-		Com::ComM
 		SysS::Scheduler
+		Com::ComM
+		Com::ComTP
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE
