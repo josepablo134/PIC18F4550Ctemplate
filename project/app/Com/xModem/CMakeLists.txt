@@ -3,10 +3,11 @@
 # @author Josepablo C (josepablo134@gmail.com)
 ################################################################################
 set(COMPONENT_NAME Com)
-set(SUB_COMPONENT_NAME ComTP)
+set(SUB_COMPONENT_NAME xModem)
 
 add_library(${COMPONENT_NAME}_${SUB_COMPONENT_NAME} STATIC
-		${CMAKE_CURRENT_LIST_DIR}/src/ComTP.c
+		${CMAKE_CURRENT_LIST_DIR}/src/xModem.c
+		${CMAKE_CURRENT_LIST_DIR}/src/xModem_internal.c
 )
 
 target_include_directories(${COMPONENT_NAME}_${SUB_COMPONENT_NAME} PUBLIC
@@ -18,5 +19,6 @@ add_library(${COMPONENT_NAME}::${SUB_COMPONENT_NAME} ALIAS ${COMPONENT_NAME}_${S
 target_link_libraries( ${COMPONENT_NAME}_${SUB_COMPONENT_NAME} 
 		BoardConfig::Board
 		Utils
-		Com::ComM
+		BSP::UART
+		SysS::Scheduler
 )

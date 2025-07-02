@@ -43,8 +43,7 @@ target_link_libraries( ${EXEC_NAME}
 		BSP::Flash
 		BoardConfig::Board
 		SysS::Scheduler
-		Com::ComM
-		Com::ComTP
+		Com::xModem
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE

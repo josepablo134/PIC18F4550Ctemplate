@@ -32,17 +32,16 @@ void UART_Init(){
 
 void UART_Open(uart_baudrate baud){
     uint16_t buffer;
-    //Configurar pines
     //TX(C6) - RX(C7)
     PORTC = 0;LATC  = 0;TRISC = 0xC0;
-    
+
     /// Receive Active(0) - BRG16(1) - WUE(1)
     BAUDCON = 0b00001010;
     /// BRGH(0) - TXEN(0) - SYNC(0) : Modo Asincrono
     TXSTA = 0b00000000;
     /// SPEN(0) - CREN(0)           : Modo Asincrono
     RCSTA = 0b00000000;
-    
+
     /// Generador de baudrate automatico
     // FOSC/[64(n+1)] = Baud
     //=>    [(FOSC/Baud)/64]-1;
@@ -77,40 +76,57 @@ void UART_Open(uart_baudrate baud){
     
     ///Activar el puerto UART
     #if (UART_CFG_ISR_PRIORITY == UART_ISR_PRIORITY_LOW)
-        IPR1bits.TX1IP = 0;//Sin interrupcion, pero registrada como low
-        IPR1bits.RC1IP = 0;//Sin interrupcion, pero registrada como low
+        IPR1bits.TX1IP = 0;
+        IPR1bits.RC1IP = 0;
     #else
-        IPR1bits.TX1IP = 1;//Sin interrupcion, pero registrada como high
-        IPR1bits.RC1IP = 1;//Sin interrupcion, pero registrada como high
+        IPR1bits.TX1IP = 1;
+        IPR1bits.RC1IP = 1;
     #endif
     TXSTAbits.TXEN = 1;//Tx Enable
     RCSTAbits.CREN = 1;//Rx Enable
     RCSTAbits.SPEN = 1;//Serial Port Enable
 }
 
-uart_status_t UART_TransmitAsync(const uart_byte* buffer, uart_buffer_size_t size){
-    if( buffer && size ){// Check pointer and size are valid
-        if( status & TX_BUSY ){
-            return status;
-        }else{
-            UART_internalTransmitAsync( buffer , size );
-        }
-    }else{
-        return UART_ERROR;
+#ifdef UART_CFG_STATIC_CONFIG_ENABLED
+    void UART_OpenStatic(void){
+        //TX(C6) - RX(C7)
+        PORTC = 0U;
+        LATC  = 0U;
+        TRISC |= 0xC0U;
+
+        #if (UART_CFG_ISR_PRIORITY == UART_ISR_PRIORITY_LOW)
+            IPR1bits.TX1IP = 0;//Sin interrupcion, pero registrada como low
+            IPR1bits.RC1IP = 0;//Sin interrupcion, pero registrada como low
+        #else
+            IPR1bits.TX1IP = 1;//Sin interrupcion, pero registrada como high
+            IPR1bits.RC1IP = 1;//Sin interrupcion, pero registrada como high
+        #endif
+
+        BAUDCON |= UART_CFG_STATIC_CONFIG_BAUDCON;
+        SPBRG |= UART_CFG_STATIC_CONFIG_SPBRG;
+        SPBRGH |= UART_CFG_STATIC_CONFIG_SPBRGH;
+        TXSTA |= UART_CFG_STATIC_CONFIG_TXSTA;
+        RCSTA |= UART_CFG_STATIC_CONFIG_RCSTA;
     }
+#endif
+
+uart_status_t UART_TransmitAsync(const uart_byte* buffer, uart_buffer_size_t size){
+    ASSERT( buffer && size );
+    if( status & TX_BUSY ){
+        return status;
+    }
+
+    UART_internalTransmitAsync( buffer , size );
     return status;
 }
 
 uart_status_t UART_TransmitSync(const uart_byte* buffer, uart_buffer_size_t size){
-    if( buffer && size ){ // Check pointer and size are valid
-        if( status & TX_BUSY ){
-            return status;
-        }else{
-            UART_internalTransmitSync( buffer, size );
-        }
-    }else{
-        return UART_ERROR;
+    ASSERT( buffer && size );
+    if( status & TX_BUSY ){
+        return status;
     }
+
+    UART_internalTransmitSync( buffer, size );
     return status;
 }
 
@@ -121,41 +137,31 @@ uart_status_t UART_CancelTransmit(void){
 }
 
 uart_status_t UART_ReceiveAsync(uart_byte* buffer, uart_buffer_size_t size){
-    if( buffer || size ){ // Check pointer and size are valid
-        if( status & RX_BUSY ){
-            return status;
-        }else{
-            UART_internalReceiveAsync( buffer, size );
-        }
-    }else{
-        return UART_ERROR;
+    ASSERT( buffer && size );
+    if( status & TX_BUSY ){
+        return status;
     }
+
+    UART_internalReceiveAsync( buffer, size );
     return status;
 }
 
 uart_status_t UART_ReceiveSync(uart_byte* buffer, uart_buffer_size_t size){
-    if( buffer || size ){ // Check pointer and size are valid
-        if( status & RX_BUSY ){
-            return status;
-        }else{
-            UART_internalReceiveSync( buffer, size );
-        }
-    }else{
-        return UART_ERROR;
+    ASSERT( buffer && size );
+    if( status & TX_BUSY ){
+        return status;
     }
+
+    UART_internalReceiveSync( buffer, size );
     return status;
 }
 
 uart_status_t UART_SetPollingReceive(uart_byte* buffer, uart_buffer_size_t size){
-    if( buffer || size ){ // Check pointer and size are valid
-        if( status & RX_BUSY ){
-            return status;
-        }else{
-            UART_internalSetPollingReceive( buffer, size );
-        }
-    }else{
-        return UART_ERROR;
+    ASSERT( buffer && size );
+    if( status & TX_BUSY ){
+        return status;
     }
+    UART_internalSetPollingReceive( buffer, size );
     return status;
 }
 
@@ -172,6 +178,16 @@ uart_status_t UART_CancelReceive(void){
 
 uart_status_t UART_Status(void){
     return status;
+}
+
+void UART_putch( uint8_t c ){
+    while( !PIR1bits.TXIF ){}
+    TXREG = c;
+}
+
+uint8_t UART_getch( void ){
+    while( !PIR1bits.RC1IF ){}
+    return RCREG;
 }
 
 /*****************************************************************************

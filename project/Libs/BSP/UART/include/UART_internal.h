@@ -1,6 +1,7 @@
 #ifndef _UART_INT_H
 #define	_UART_INT_H
 
+	#include "project_macros.h"
 	#include "UART_types.h"
 
     extern volatile uart_byte               *pTx;

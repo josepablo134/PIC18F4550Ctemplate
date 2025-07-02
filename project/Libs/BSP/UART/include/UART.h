@@ -27,6 +27,25 @@ extern "C" {
      * */
     extern void UART_Open(uart_baudrate);
 
+    #ifdef UART_CFG_STATIC_CONFIG_ENABLED
+        /**
+         * @brief Initialize peripheral using REG vals from MACROS to save instructions
+         * */
+        extern void UART_OpenStatic(void);
+    #endif
+
+    /**
+     * @brief Blocks execution until the bus is ready for transmission, then sets the byte and returns.
+     * @remarks It does the action right away without taking into account any current transmission flow.
+     */
+    extern void UART_putch( uint8_t );
+
+    /**
+     * @brief Blocks execution until the char is received, then returns the byte.
+     * @remarks It does the action right away without taking into account any current transmission flow.
+     */
+    extern uint8_t UART_getch( void );
+
     /**
      * @brief Send a buffer of bytes using interrupts
      * */
