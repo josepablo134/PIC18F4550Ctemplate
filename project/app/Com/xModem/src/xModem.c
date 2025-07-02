@@ -25,7 +25,7 @@ xmodem_std_status_t xModem_Send( xmodem_packet_t* packet, xmodem_bool_t timeout_
     UART_putch( XMODEM_CHAR_SOH );
     UART_putch( packet->length );
     UART_putch( ~packet->length );
-    while( counter > 0U ){
+    while( 0U < counter-- ){
         UART_putch( *pointer );
         crc_val ^= *pointer;
         pointer++;
@@ -48,14 +48,12 @@ xmodem_std_status_t xModem_Receive( xmodem_packet_t* packet, xmodem_bool_t timeo
     pointer = packet->payload;
 
     /// Expect a SOH
-    if( ( xModem_getch( &byte, timeout_enabled ) != XMODEM_OK ) || ( byte != XMODEM_CFG_CHAR_SOH ) ){
-        xModem_Nack();
+    if( ( xModem_getch( &byte, timeout_enabled ) == XMODEM_NOT_OK ) || ( byte != XMODEM_CFG_CHAR_SOH ) ){
         return XMODEM_NOT_OK;
     }
 
     /// Expect the size of packet
-    if( ( xModem_getch( &byte, timeout_enabled ) != XMODEM_OK ) || ( byte > XMODEM_CFG_MAX_BUFFER_SIZE ) ){
-        xModem_Nack();
+    if( ( xModem_getch( &byte, timeout_enabled ) == XMODEM_NOT_OK ) || ( byte > XMODEM_CFG_MAX_BUFFER_SIZE ) ){
         return XMODEM_NOT_OK;
     }
 
@@ -63,16 +61,14 @@ xmodem_std_status_t xModem_Receive( xmodem_packet_t* packet, xmodem_bool_t timeo
     counter = byte;
     
     /// Expect the 1st complement of the size
-    if( ( xModem_getch( &byte, timeout_enabled ) != XMODEM_OK ) || ( byte != ~counter ) ){
-        xModem_Nack();
+    if( ( xModem_getch( &byte, timeout_enabled ) == XMODEM_NOT_OK ) || ( byte != ~counter ) ){
         return XMODEM_NOT_OK;
     }
 
     /// Receive all bytes and calculate the CRC on the go
     counter = packet->length + 1U;
-    while( counter > 0U ){
-        if( ( xModem_getch( pointer, timeout_enabled ) != XMODEM_OK ) ){
-            xModem_Nack();
+    while( 0U < counter-- ){
+        if( ( xModem_getch( pointer, timeout_enabled ) == XMODEM_NOT_OK ) ){
             return XMODEM_NOT_OK;
         }
         crc_val ^= *pointer;
@@ -80,13 +76,11 @@ xmodem_std_status_t xModem_Receive( xmodem_packet_t* packet, xmodem_bool_t timeo
     }
 
     /// Compare the CRC
-    if( ( xModem_getch( &byte, timeout_enabled ) != XMODEM_OK ) || ( byte != crc_val ) ){
-        xModem_Nack();
+    if( ( xModem_getch( &byte, timeout_enabled ) == XMODEM_NOT_OK ) || ( byte != crc_val ) ){
         return XMODEM_NOT_OK;
     }
 
     /// All good!
-    xModem_Ack();
     return XMODEM_OK;
 }
 
