@@ -3,4 +3,4 @@
 # @author Josepablo C (josepablo134@gmail.com)
 ################################################################################
 
-add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/xModem )
+add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/xsModem )
