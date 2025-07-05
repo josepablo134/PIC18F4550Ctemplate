@@ -99,8 +99,8 @@ def program_device( ser_port:str, ihex: IntelHex, dev_config : dict[str,str] ):
     if( not ping( s, CNF_CMD_TIMEOUT) ):
         if( not enter_reprogramming( s , CNF_REPROGRAMMING_TIMEOUT ) ):
             raise PIC18F45450Error("Reprogramming mode not detected")
-    else:
-        print("Reprogramming mode enabled ...")
+
+    print("Reprogramming mode enabled ...")
 
     flush_ser_port( s )
 
