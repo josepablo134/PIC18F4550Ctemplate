@@ -18,4 +18,5 @@ add_library(${COMPONENT_NAME}::${SUB_COMPONENT_NAME} ALIAS ${COMPONENT_NAME}_${S
 
 target_link_libraries( ${COMPONENT_NAME}_${SUB_COMPONENT_NAME}
 		BSP::Mcu
+		BSP::UART
 )

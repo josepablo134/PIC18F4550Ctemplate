@@ -30,20 +30,14 @@ include( cmake/project.cmake)
 
 add_executable( ${EXEC_NAME}
 	${WORK_DIR}/main.c
-	${WORK_DIR}/App.c
 )
 
 add_subdirectory( ${WORK_DIR}/Libs )
 add_subdirectory( ${WORK_DIR}/BoardConfig )
-add_subdirectory( ${WORK_DIR}/App )
 
 target_link_libraries( ${EXEC_NAME}
 		BSP::UART
-		BSP::Timer0
-		BSP::Flash
 		BoardConfig::Board
-		SysS::Scheduler
-		Com::xsModem
 )
 
 target_include_directories(${EXEC_NAME} PRIVATE

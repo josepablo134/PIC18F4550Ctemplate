@@ -1,19 +1,30 @@
-#include "App.h"
+#include "board_config.h"
+#include "UART.h"
+#include <stdio.h>
+
+uint8_t msg[] = "Hello world, counter: [255]\n";
 
 /// @brief Software shall not consume more than 6.25% of ROM ( 2048KB! )
 void main(void) {
-    App_state_t app_state;
-    App_Init();
+    Board_Init();
+    UART_Init();
+    UART_OpenStatic();
 
-    if( XSMODEM_OK == xsModem_waitAck( XSMODEM_TRUE ) ){
-        xsModem_Ack();
-        app_state = APP_STATE_APP_REPROGRAMMING;
-    }else{
-        app_state = APP_STATE_APP_CHECK;
+    /** Make PortA full DIO */
+    TRISA = 0x00;
+    PORTA = 0x00;
+    LATA = 0x00;
+    ADCON1 = 0x0F;
+
+    
+    uint8_t counter;
+    uint8_t str_len;
+
+    counter = 0U;
+    while(1){
+        str_len = snprintf( msg, sizeof(msg), "Hello world, counter: [%u]\n", counter++);
+        UART_TransmitAsync( msg, str_len );
+        LATAbits.LA4 = !PORTAbits.RA4;
+        __delay_ms( 500 );
     }
-
-    while( 1U ){
-        app_state = App_mainFunction( app_state );
-    }
-
 }
