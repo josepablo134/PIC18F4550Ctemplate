@@ -19,6 +19,9 @@ def get_blocks( ihex: IntelHex, sector_size: int, block_size: int ) -> list[ tup
         if( base_addr == 0x300000 ):
             # Ignore configuration bits
             continue
+        if( base_addr == 0x200000 ):
+            # Ignore id bits
+            continue
         content_len = last_addr - base_addr
 
         if( content_len <= block_size ):
