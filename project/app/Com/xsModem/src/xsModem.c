@@ -73,6 +73,7 @@ xsmodem_std_status_t xsModem_Receive( xsmodem_packet_t* packet, xsmodem_bool_t t
 
     /// Save the packet size
     counter = byte;
+    packet->length = counter;
 
     /// Expect the 1st complement of the size
     if( ( xsModem_getch( &byte, timeout_enabled ) == XSMODEM_NOT_OK ) || ( byte != (uint8_t) ~counter ) ){

@@ -151,8 +151,6 @@ static uint8_t App_Bldr_GetLength( uint8_t *length ){
     length_n = UART_getch();
 
     if( *length != (uint8_t) ~length_n ){
-        App_sendCancel( *length );
-        App_sendCancel( length_n );
         return 1;
     }
     return 0;
@@ -171,11 +169,11 @@ static void App_Cmd_ReadBlock(void){
     }
 
     if( App_Bldr_GetLength( &bldr_len ) || ( bldr_len > APP_CFG_PAGE_BUFFER_SIZE ) ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 1 );
     }
 
     if( FLS_NOT_OK == FlashRead( bldr_addr, bldr_len, bldr_flash_page_buffer ) ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 2 );
     }
 
     /// Command accepted
@@ -199,21 +197,21 @@ static void App_Cmd_ProgramBlock(void){
 
     /// Length is determined by the lenght of the packet's payload
     if( xsModem_Receive( &bldr_packet, XSMODEM_TRUE ) == XSMODEM_NOT_OK ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 1 );
     }
 
     bldr_len = bldr_packet.length;
 
     if( FLS_NOT_OK == FlashErase( bldr_addr, bldr_len ) ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 2 );
     }
 
     if( FLS_NOT_OK == FlashWrite( bldr_addr, bldr_len, bldr_flash_page_buffer ) ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 3 );
     }
 
     if( FLS_NOT_OK == FlashValidate( bldr_addr, bldr_len, bldr_flash_page_buffer ) ){
-        return App_sendCancel( APP_ERR_CHAR );
+        return App_sendCancel( APP_ERR_CHAR + 4 );
     }
 
     xsModem_Ack();
