@@ -3,6 +3,6 @@
     "baudrate": 115200,
     "page_size": 32,
     "sector_size": 64,
-    "block_size": 64,
+    "block_size": 128,
     "flash_offset":"0x02000"
 }

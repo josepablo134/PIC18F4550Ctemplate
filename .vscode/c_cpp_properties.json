@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:/Program Files/Microchip/xc8/v3.00/pic/include/**",
+                "${workspaceFolder}/project/Libs/**",
+                "${workspaceFolder}/project/App/**",
+                "${workspaceFolder}/project/BoardConfig/**",
+                "${workspaceFolder}/project"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        }
+    ],
+    "version": 4
+}

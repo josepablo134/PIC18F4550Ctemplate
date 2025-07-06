@@ -13,4 +13,3 @@ project/.vscode/settings.json
 **.log.inx
 **/__pycache__/*
 **.pyc
-**/.vscode/**

@@ -25,17 +25,22 @@ static uint8_t App_Bldr_GetLength( uint8_t *length );
 /**
  * Send the ASCII char for CANCEL through UART
  */
-static void App_sendCancel(uint8_t err);
+inline static void App_sendCancel(uint8_t err);
 
 /**
- * Read a block (128 bytes) of program Flash
+ * Read a block (up to 128 bytes) of program Flash
  */
-static void App_Cmd_ReadBlock(void);
+inline static void App_Cmd_ReadBlock(void);
+
+/**
+ * Erase a block (up to 128 bytes) of program Flash
+ */
+inline static void App_Cmd_EraseBlock(void);
 
 /**
  * Program a block (128 bytes) of program Flash
  */
-static void App_Cmd_ProgramBlock(void);
+inline static void App_Cmd_ProgramBlock(void);
 
 
 /*****************************************************************************
@@ -43,40 +48,16 @@ static void App_Cmd_ProgramBlock(void);
  *****************************************************************************/
 
 void App_Init( void ){
-    Board_Init();
-    Scheduler_Init();
-    UART_Init();
-    UART_OpenStatic();
-
     bldr_packet.length = APP_CFG_PAGE_BUFFER_SIZE;
     bldr_packet.payload = bldr_flash_page_buffer;
 }
 
-App_state_t App_mainFunction( App_state_t state ){
-    switch ( state )
-    {
-        case APP_STATE_APP_CHECK:
-            state = App_State_AppCheck( state );
-            break;
-        case APP_STATE_APP_REPROGRAMMING:
-            state = App_State_AppReprogramming( state );
-            break;
-        case APP_STATE_APP_SAFE_STATE:
-            state = App_State_AppSafeState( state );
-            break;
-        default:
-            break;
-    }
-    return state;
-}
-
-App_state_t App_State_AppCheck( App_state_t state ){
+void App_State_AppCheck( void ){
     STKPTR = 0U;
     asm("GOTO 0x2000");
-    return state;
 }
 
-App_state_t App_State_AppReprogramming( App_state_t state ){
+void App_State_AppReprogramming( void ){
     uint8_t     cmd;
     while( 1U ){
         cmd = UART_getch();
@@ -87,6 +68,12 @@ App_state_t App_State_AppReprogramming( App_state_t state ){
                  * READ MEMORY
                 */
                 App_Cmd_ReadBlock();
+                break;
+            case 'E':
+                /**
+                 * ERASE MEMORY
+                */
+               App_Cmd_EraseBlock();
                 break;
             case 'P':
                 /**
@@ -103,28 +90,15 @@ App_state_t App_State_AppReprogramming( App_state_t state ){
                 reset();
                 break;
             case 'A':
+                /** 
+                 * PING
+                */
                 UART_putch( 'A' );
                 break;
             default:
                 break;
         }
     }
-    return state;
-}
-
-App_state_t App_State_AppSafeState( App_state_t state ){
-    sleep();
-    /** Make PortA full DIO */
-    TRISA = 0x00;
-    PORTA = 0x00;
-    LATA = 0x00;
-    ADCON1 = 0x0F;
-    while (1)
-    {
-        LATAbits.LA4 = !PORTAbits.RA4;
-        __delay_ms( 100U );
-    }
-    return state;
 }
 
 /*****************************************************************************
@@ -156,11 +130,11 @@ static uint8_t App_Bldr_GetLength( uint8_t *length ){
     return 0;
 }
 
-static void App_sendCancel( uint8_t err ){
+inline static void App_sendCancel( uint8_t err ){
     UART_putch( err );
 }
 
-static void App_Cmd_ReadBlock(void){
+inline static void App_Cmd_ReadBlock(void){
     uint16_t    bldr_addr;
     uint8_t     bldr_len;
 
@@ -184,7 +158,26 @@ static void App_Cmd_ReadBlock(void){
     xsModem_Transmit( &bldr_packet, XSMODEM_TRUE );
 }
 
-static void App_Cmd_ProgramBlock(void){
+inline static void App_Cmd_EraseBlock(void){
+    uint16_t    bldr_addr;
+    uint8_t     bldr_len;
+
+    if( App_Bldr_GetAddr( &bldr_addr ) ){
+        return App_sendCancel( APP_ERR_CHAR );
+    }
+
+    if( App_Bldr_GetLength( &bldr_len ) || ( bldr_len > APP_CFG_PAGE_BUFFER_SIZE ) ){
+        return App_sendCancel( APP_ERR_CHAR + 1 );
+    }
+
+    if( FLS_NOT_OK == FlashErase( bldr_addr, bldr_len ) ){
+        return App_sendCancel( APP_ERR_CHAR + 2 );
+    }
+
+    xsModem_Ack();
+}
+
+inline static void App_Cmd_ProgramBlock(void){
     uint16_t    bldr_addr;
     uint8_t     bldr_len;
 

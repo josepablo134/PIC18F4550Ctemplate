@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "*.h": "c"
+    },
+    "cmake.sourceDirectory": "D:/Projects/Embedded/PIC18F4550/PIC18F4550Ctemplate/project",
+    "cmake.generator": "Ninja",
+    "cmake.environment": {
+        "CMAKE_BUILD_TYPE":"Release"
+    },
+    "cortex-debug.variableUseNaturalFormat": false
+}

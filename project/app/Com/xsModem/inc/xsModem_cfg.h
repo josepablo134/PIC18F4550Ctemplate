@@ -2,7 +2,7 @@
 #define _XSMODEM_CFG_H_
 
     #define XSMODEM_CFG_MAX_BUFFER_SIZE          (128U)
-    #define XSMODEM_CFG_TIMEOUT_MS               (100U)
+    #define XSMODEM_CFG_TIMEOUT_MS               (50U)
     #define XSMODEM_CFG_RETRIES_COUNT            (10U)
 
     #define XSMODEM_CFG_CRC8_INIT_VAL            (0xCEU)

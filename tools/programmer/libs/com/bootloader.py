@@ -49,6 +49,32 @@ def read_block( s, addr : int, len : int, timeout : float = 60  ) -> bytearray:
         return None
     return receive( s )
 
+def erase_block( s, addr : int, len : int, timeout : float = 60  ) -> bytearray:
+    addr = addr & 0xFFFF
+    addr_n = (~addr) & 0xFFFF
+    len = len & 0xFF
+    len_n = (~len) & 0xFF
+
+    # ERASE Memory CMD char
+    cmd_bytes = bytearray(b'E')
+
+    cmd_bytes.append( addr & 0xFF )
+    cmd_bytes.append( (addr>>8) & 0xFF )
+
+    cmd_bytes.append( addr_n & 0xFF )
+    cmd_bytes.append( (addr_n>>8) & 0xFF )
+
+    cmd_bytes.append( len )
+    cmd_bytes.append( len_n )
+
+    s.write( cmd_bytes )
+    single_byte = receive_byte( s , timeout )
+
+    if( single_byte != COM_ACK ):
+        return None
+
+    return receive( s )
+
 def write_block( s, addr: int, block: bytearray, timeout : float = 60 ) -> bool:
     addr = addr & 0xFFFF
     addr_n = (~addr) & 0xFFFF

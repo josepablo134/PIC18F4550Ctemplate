@@ -27,14 +27,6 @@ def transmit( s , frame : bytearray, timeout : float = 60 ) -> bool:
     if( single_byte != COM_NACK ):
         return False
 
-    # for single_byte in new_frame:
-    #     s.write( single_byte.to_bytes( 1 , 'little' ) )
-    #     confirmation = receive_byte( s , timeout )
-    #     print( hex(single_byte), "=>", hex( int.from_bytes( confirmation ) ) )
-    #     # if( confirmation != COM_ACK ):
-    #     #     return False
-    # print("")
-
     s.write( new_frame )
 
     single_byte = receive_byte( s , timeout )
